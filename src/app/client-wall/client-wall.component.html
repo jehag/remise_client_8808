@@ -1,0 +1,90 @@
+<div class="main-buttons">
+    <a class="circle-link" (click)="previousGraph()" target="_blank" rel="noopener">
+        Previous
+    </a>
+    <a class="circle-link" (click)="nextGraph()" target="_blank" rel="noopener">
+        Next
+    </a>
+</div>
+
+<div class='client-wall-graph' [style.display]="graphType == 0 ? 'flex' : 'none'">
+    <svg id='client-wall-chart'>
+    </svg>
+</div>
+
+<div class="bottles" [style.display]="graphType == 1 ? 'flex' : 'none'">
+    <h1 id="title"></h1>
+        <div class="all">
+          <div class="bottle">
+            <div class="cap"></div>
+              <div class="glass">
+                <div class="inner-glass">
+                  <div class="water-level">
+                    <div class="wave"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="image-div">
+            <img class="image" src="assets/images/centre_urbain.jpg">
+          </div>
+          <p class="name">Grand centre urbain</p>
+         </div>
+        <div class="all">
+          <div class="bottle">
+            <div class="cap"></div>
+              <div class="glass">
+                <div class="inner-glass">
+                  <div class="water-level">
+                    <div class="wave"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class= "image-div">
+            <img class= "image" src="assets/images/grande_ville.jpg">
+          </div>
+          <p class="name">Grande ville</p>
+         </div>
+         <div class="all">
+          <div class="bottle">
+            <div class="cap"></div>
+              <div class="glass">
+                <div class="inner-glass">
+                  <div class="water-level">
+                    <div class="wave"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class= "image-div">
+            <img class= "image" src="assets/images/ville_moyenne.jpg">
+          </div>
+          <p class="name">Ville moyenne</p>
+         </div>
+          <div class="all">
+          <div class="bottle">
+            <div class="cap"></div>
+              <div class="glass">
+                <div class="inner-glass">
+                  <div class="water-level">
+                    <div class="wave"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+            <div class= "image-div">
+              <img class= "image" src="assets/images/village.jpg">
+           </div>
+           <p class="name">Village</p>
+         </div>
+</div>
+
+<div class="pyramid-container" [style.display]="graphType == 2 ? 'flex' : 'none'">
+</div>
+
+<div class='tupperware-graph' [style.display]="graphType == 3 ? 'flex' : 'none'">
+  <svg id='tupperware-chart'>
+  </svg>
+</div>
+

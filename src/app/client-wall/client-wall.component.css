@@ -1,0 +1,241 @@
+* {margin: 0; padding: 0; box-sizing: border-box;}
+body {width: 100%; height: 100vh;}
+
+.bottles {
+  positon: relative;
+  display: flex;
+  width: 100 hw;
+  height: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.all {
+  positon: relative;
+  width: 25%;
+}
+.bottle {
+  width: 100px;
+  height: 150px;
+  position: relative;
+  left:50%;
+  transform: translate(-50%, 0%);
+}
+.cap {
+  width: 90%;
+  height: 20px;
+  top: 0%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, 0%);
+  background-color: #aaa;
+  border-bottom: 3px solid #828788;
+  border-top: 3px solid #828788;
+  border-radius: 5px;
+}
+
+.glass {
+  width: 100%;
+  height: calc(100% - 20px);
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  border: 3px solid #aaa;
+  border-radius: 10px;
+}
+.inner-glass {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  cursor:pointer;
+}
+
+.water-level {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  background-color: #fff;
+  
+}
+.wave {
+  background-color: #3f68c5;
+  position: absolute;
+  top: 0%;
+  height: calc(max(calc(150px - 20px), 100px) * 2.5);
+  width: calc(max(calc(150px - 20px), 100px) * 2.5);
+  border-radius: 34%;
+  left:50%;
+  transform: rotate(360deg) translate(-50%, 0%);
+  animation: wave 2s linear;
+}
+@keyframes wave {
+  0% { transform: rotate(0deg); top: 100%; left: calc(50% - calc(max(calc(150px - 20px), 100px) * 1.25))}
+  100% { transform: rotate(1turn); top: 0%; left: calc(50% - calc(max(calc(150px - 20px), 100px) * 1.25))}
+}
+
+.image-div {
+  display: flex;
+  height: 200px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.image {
+  left:50%;
+  transform: translate(-50%, 0%);
+  position: relative;
+  width: calc(100px * 2);
+}
+
+.name {
+  text-align: center;
+}
+.pyramid-container {
+  text-align: center;
+  position: relative;
+  margin-bottom: 50px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.pyramid-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+}
+
+.circle-link {
+  height: 40px;
+  width: 200px;
+  border-radius: 40px;
+  margin: 8px;
+  background-color: white;
+  border: 1px solid #eeeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: 1s ease-out;
+  color:black;
+  font-weight: bold;
+  text-decoration: none;
+  user-select: none;
+}
+
+.circle-link:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main-buttons {
+  flex-direction: row;
+  justify-content: space-between;
+  display: flex;
+}
+
+#title {
+  text-align: center;
+  font-weight: bold;
+  margin: auto;
+  width: 100%;
+}
+
+/* * {margin: 0; padding: 0; box-sizing: border-box;}
+body {width: 100%; height: 100vh; background-color: #262626;} */
+
+.table {
+  width: 100%;
+  height: 100%;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+:host /deep/ .column {
+  position: relative;
+  width: auto;
+  height: 100%;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+:host /deep/ .tupperware {
+  position: relative;
+  width: 100%;
+  height: 10%;
+}
+
+:host /deep/ .tup {
+  width: 100%;
+  height: 20%;
+  top: 10%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: #aaa;
+  border: 2px solid #fff;
+  border-radius: 10%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+:host /deep/ .per {
+  width: 30%;
+  height: calc(10% + 2px);
+  top: calc(20% + 2px);
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: #aaa;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+  border-radius: 0px 0px 50% 50%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+:host /deep/ .ware {
+  position: relative;
+  width: 95%;
+  height: calc(100% - 10%);
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: #aaa;
+  border: 2px solid #fff;
+  border-radius: 0 0 15px 15px;
+  overflow: hidden;
+  z-index: -1;
+}
+
+@keyframes fall-left {
+  0% { transform: rotate(-14deg) translate(20px, -60px); top: -500px; left: -20px; }
+  70% { transform: rotate(-14deg) translate(20px, -60px); top: 60px; left: -20px; }
+  80% { transform: rotate(-3deg) translate(-20px, -60px); top: 40px; left: 20px; }
+  90% { transform: rotate(8deg) translate(-20px, -60px); top: 60px; left: 20px; }
+  100% { transform: rotate(0deg) translate(-20px, -60px); top: 60px; left: 20px; }
+}
+
+@keyframes fall-right {
+  0% { transform: rotate(14deg) translate(-20px, -60px); top: -500px; left: 20px; }
+  70% { transform: rotate(14deg) translate(-20px, -60px); top: 60px; left: 20px; }
+  80% { transform: rotate(3deg) translate(20px, -60px); top: 40px; left: -20px; }
+  90% { transform: rotate(-8deg) translate(20px, -60px); top: 60px; left: -20px; }
+  100% { transform: rotate(0deg) translate(20px, -60px); top: 60px; left: -20px; }
+}

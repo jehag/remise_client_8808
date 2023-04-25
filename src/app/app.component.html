@@ -1,0 +1,21 @@
+<div class="dashboard">
+  <div class="dashboard-title">
+    <h1>Visualisation Zéro déchets du biodôme</h1>
+  </div>
+  <div class="main-buttons">
+    <a class="circle-link" (click)="showPhone(true)" target="_blank" rel="noopener">
+        Visualisation du téléphone
+    </a>
+    <a class="circle-link" (click)="showPhone(false)" target="_blank" rel="noopener">
+        Visualisation murale
+    </a>
+  </div>
+  <app-phone *ngIf="showingPhone"></app-phone>
+  <!--
+    <app-wall *ngIf="!showingPhone"></app-wall>
+  -->
+  <app-client-wall *ngIf="!showingPhone"></app-client-wall>
+</div>
+<script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.2/package/dist/xlsx.full.min.js"></script>
+
+<router-outlet></router-outlet>
