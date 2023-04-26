@@ -9,13 +9,14 @@ import { VizService } from '../services/viz/viz.service';
 import { ScalesService } from '../services/scales/scales.service';
 import * as d3 from 'd3';
 import { QuestionData } from '../interfaces/question-data';
+import { ScalesDataSetup } from '../interfaces/scales-data-setup';
 
 enum GraphType {
   Map = 0,
   CitySize = 1,
   Pyramid = 2,
   Tupperware = 3,
-
+  Scales = 4
 }
 enum Province {
   BritishColumbia = 0,
@@ -100,7 +101,10 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Tupperware;
         break;
       case GraphType.Tupperware:
-        this.graphType = GraphType.Map;
+        this.graphType = GraphType.Scales;
+        break;
+      case GraphType.Scales:
+        this.graphType = GraphType.Map
         break;
     }
   }
@@ -108,7 +112,7 @@ export class ClientWallComponent implements OnInit {
   previousGraph(){
     switch (this.graphType){
       case GraphType.Map:
-        this.graphType = GraphType.Tupperware;
+        this.graphType = GraphType.Scales;
         break;
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
@@ -118,6 +122,9 @@ export class ClientWallComponent implements OnInit {
         break;
       case GraphType.Tupperware:
         this.graphType = GraphType.CitySize;
+        break;
+      case GraphType.Scales:
+        this.graphType = GraphType.Tupperware
         break;
     }
   }
@@ -130,7 +137,9 @@ export class ClientWallComponent implements OnInit {
     this.createPyramidGraph();
     this.graphType = GraphType.Tupperware;
     this.createTupperwareGraph();
-    this.graphType = GraphType.Pyramid;
+    this.graphType = GraphType.Scales;
+    this.createScaleGraph();
+    this.graphType = GraphType.Map;
   }
 
   createMapGraph(){
@@ -341,4 +350,18 @@ export class ClientWallComponent implements OnInit {
     this.vizService.drawTupperwareBars(g, dataset, xScale, yScale);
   }
 
+  createScaleGraph(){
+    let vehiculesData: ScalesDataSetup[] = [];
+    const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
+    for(let i = 1; i <= 5; i++){
+      const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
+      const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
+      vehiculesData.push({
+        vehicule: vehiculeNames[i-1],
+        vracReturnValue: this.preprocessService.getReturnableValue(separatedVehiculeData[0]),
+        nonVracReturnValue: this.preprocessService.getReturnableValue(separatedVehiculeData[1])
+      })
+    }
+    this.vizService.drawScale(vehiculesData[0]);
+  }
 }

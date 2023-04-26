@@ -46,6 +46,7 @@ const Q10Blabels: LabelMap = {
   'Q10Br97': "Aucune raison en particulier / je ne suis pas intéressé(e)"
 };
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -650,6 +651,42 @@ export class PreprocessService {
     });
     newQuestionDataHelper.sumOfValues = questionData.sumOfValues;
     return newQuestionDataHelper;
+  }
+
+  getVehiculeRows(vehiculeNumber: number): any[] {
+    let rows: any[] = [];
+    this.excelData.forEach((row) => {
+      if(row['Q3r' + vehiculeNumber] == 1){
+        rows.push(row)
+      }
+    })
+    return rows;
+  }
+
+  getVracRows(totalRows: any[]): any[] {
+    let vracRows: any[] = [];
+    let nonVracRows: any[] = [];
+    totalRows.forEach((row) => {
+      if(row['Q5r1'] == 1 || row['Q5r2'] == 2 || row['Q5r3'] == 3){
+        vracRows.push(row)
+      } else {
+        nonVracRows.push(row);
+      }
+    })
+    return [vracRows, nonVracRows];
+  }
+
+  getReturnableValue(totalRows: any[]) {
+    let returners: number = 0;
+    let nonReturners: number = 0;
+    totalRows.forEach((row) => {
+      if(row['Q15'] == 1 || row['Q15'] == 2){
+        returners++;
+      } else if(row['Q15'] == 3){
+        nonReturners++;
+      }
+    })
+    return (returners/(returners + nonReturners));
   }
   
 }

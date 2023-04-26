@@ -6,6 +6,7 @@ import { QuestionData } from 'src/app/interfaces/question-data';
 import { QuestionDataHelper } from 'src/app/interfaces/question-data-helper';
 import { GenderDataSetup } from 'src/app/interfaces/gender-data-setup';
 import { MapDataSetup } from 'src/app/interfaces/map-data-setup';
+import { ScalesDataSetup } from 'src/app/interfaces/scales-data-setup';
 
 @Injectable({
   providedIn: 'root'
@@ -433,12 +434,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .append("div")
       .attr("class", "pyramid-level")
       .style("border-top", (d, i) => "50px solid " + colorScale(i))
-      .style("border-radius", (d, i) => {
-        if(i == 0){
-          return '20px 20px 10px 10px'
-        }
-        return '0%'
-      })
       .style("width", (d, i) => {
         return (numElements - i) * 60 + "px";
       })
@@ -509,9 +504,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('border-right', '30px solid transparent')
       .style('border-bottom', '50px solid' + colorScale(numElements - 1))
       .style('transform', 'rotate(180deg)')
-      .style("border-radius", () => {
-        return '20px 20px 0 0 '
-      })
   }
 
   drawJars(data: QuestionData[], title: string) {
@@ -592,6 +584,70 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     d3.select('.x.axis').selectAll('.tick').select('text').text(function(d: any) {
         return d;
     })
+  }
+
+  drawScale(data: ScalesDataSetup) {
+
+      const yes = data.vracReturnValue + data.nonVracReturnValue;
+      const no = 2 - yes;
+      
+      const deg = 7 * (no - yes) /*7 looks to be the perfect value*/
+      this.rotateScale(deg)
+    /* Faut rajouter sur le scale un pouce vers le haut à droite et un vers le bas à gauche
+      ou un oui/non */
+      
+      const numberOfElements = 5
+      
+      const vracYes = Math.round(data.vracReturnValue * numberOfElements)
+      const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
+
+      d3.select('.allScales').attr('y', 300);
+      
+      
+      this.addImages(vracYes, "pile0", "assets/images/happy_tupperware.png")
+      
+      this.addImages(noVracYes, "pile1", "assets/images/garbage.png")
+      
+      this.addImages(5 - vracYes, "pile2", "assets/images/happy_tupperware.png")
+      
+      this.addImages(5 - noVracYes, "pile3", "assets/images/garbage.png")
+  }
+  
+  
+  rotateScale(degrees: number) {
+    const scale = d3.select("#scale");
+    // const beam = d3.select("#scale .beam");
+    const plates = d3.selectAll("#scale .plate");
+    // if(scale && scale.node()){
+    //   const middleX = ((scale.node()! as any).getBoundingClientRect().right + (scale.node()! as any).getBoundingClientRect().left) / 2 - (scale.node()! as any).getBoundingClientRect().width / 2;
+    //   const middleY = ((scale.node()! as any).getBoundingClientRect().top + (scale.node()! as any).getBoundingClientRect().bottom) / 2 - (scale.node()! as any).getBoundingClientRect().height / 2;
+    // }
+  
+    scale.style("transform-origin", "top left")
+         .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`);
+  
+    plates.each(function() {
+      d3.select(this).style("transform", `rotate(${-degrees}deg)`);
+    });
+  }
+  
+  addImages(number: number, id: string, src: string) {
+    const container = d3.select(`#${id}`);
+    let marginTop = -20;
+  
+    container.selectAll("img")
+      .data(d3.range(number))
+      .enter()
+      .append("img")
+      .attr("src", src)
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("margin-top", d => {
+        const currentMarginTop = marginTop;
+        marginTop = -40;
+        return `${currentMarginTop}px`;
+      })
+      .style("display", "block");
   }
 
 
