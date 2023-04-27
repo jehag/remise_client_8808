@@ -40,19 +40,19 @@ export class VizService {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   appendTupperwareGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'y axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
 
     g.append('text')
       .text("Tranches d'âge")
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   placeTitle (g: any, title: string, width: number) {
@@ -94,11 +94,11 @@ export class VizService {
     }
   }
 
-  placeClientWallTitle (g: any, title: string, width: number) {
+  placeClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.append('text')
       .attr('class', 'title')
       .attr('x', width/2)
-      .attr('y', -20)
+      .attr('y', height)
       .style('font-size', '40px')
       .style('font-weight', 'bold')
       .style('text-anchor', 'middle')
@@ -112,6 +112,14 @@ export class VizService {
   
     g.selectAll('.x.axis-text')
       .attr('transform', 'translate(' + width / 2 + ',' + (height + 50) + ')')
+  }
+
+  positionClientWallLabels (g: any, yHeight: number, xWidth : number, xHeight: number) {
+    g.selectAll('.y.axis-text')
+      .attr('transform', 'translate( -50 ,' + yHeight / 2 + '), rotate(-90)')
+  
+    g.selectAll('.x.axis-text')
+      .attr('transform', 'translate(' + xWidth / 2 + ',' + (xHeight + 50) + ')')
   }
 
   drawXAxis (xScale: any, height: number) {
@@ -247,10 +255,26 @@ export class VizService {
           .style('animation-delay', function(d: any) { return ((container_sizes.length - d.index -1) * 0.6) + "s"})
       });
 
+      const images = ["apple.png", "brocolli.png", "chicken.png", "spaghetti.png"]
+
       d3.selectAll('.tup').style('background-color', '#BDE1FF');
       d3.selectAll('.per').style('background-color', 'red');
-      d3.selectAll('.ware').style('background-color', '#F5F5F5').style('border', '3px solid #BDE1FF');
-      
+
+      d3.selectAll('.ware')
+        .style('background-color', '#F5F5F5')
+        .style('border', '3px solid #BDE1FF')
+        .each(function(d: any, i:any, nodes:any) {
+          if (parseInt(d3.select(nodes[i].parentNode).style('height').replace("%", "")) >= 10) {
+            const randomNum = Math.floor(Math.random() * images.length);
+            const imgPath = `assets/images/tup/${images[randomNum]}`;
+            d3.select(this)
+              .style('background-image', `url(${imgPath})`)
+              .style('background-size', '25px 25px')
+              .style('background-repeat', 'no-repeat')
+              .style('background-position', 'center');
+          }
+      });
+
   }
 
   deleteGraph(graphId: string){
@@ -583,6 +607,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   drawTupperwareYAxis (yScale: any) {
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
+
+    d3.select('.y.axis').selectAll('.tick').select('text').style('font-size', '20px');
   }
 
   drawTupperwareXAxis (xScale: any, height: number) {
@@ -591,7 +617,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .call(d3.axisBottom(xScale).tickSizeOuter(0).tickArguments([5, '.0r']) as any);
     d3.select('.x.axis').selectAll('.tick').select('text').text(function(d: any) {
         return d;
-    })
+    }).style('font-size', '20px');
   }
 
   createScale() {

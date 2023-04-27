@@ -283,8 +283,8 @@ export class ClientWallComponent implements OnInit {
     const g = this.vizService.generateG(this.margin, '.tupperware-graph');
     this.vizService.appendAxes(g);
     this.vizService.appendTupperwareGraphLabels(g);
-    this.vizService.placeClientWallTitle(g, 'Combien de personnes font leur épicerie en vrac?', this.graphSize.width);
-    this.vizService.positionLabels(g, this.graphSize.width - 60, this.graphSize.height + 50);
+    this.vizService.placeClientWallTitle(g, 'Combien de personnes font leur épicerie en vrac?', this.graphSize.width, -40);
+    this.vizService.positionClientWallLabels(g, this.graphSize.height + 180, this.graphSize.width - 160, this.graphSize.height + 10);
 
     const xScale = this.scalesService.setTupperwareXScale(this.graphSize.width, labels);
     const yScale = this.scalesService.setTupperwareYScale(this.graphSize.height);

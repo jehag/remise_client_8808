@@ -10,12 +10,12 @@ type LabelMap = {
 }
 const Q10Alabels: LabelMap = {
   'Q10Ar1': "Manque de disponibilité",
-  'Q10Ar2': "Trop d'effort",
-  'Q10Ar3': "Trop d'effort",
-  'Q10Ar4': "Trop d'effort",
+  'Q10Ar2': "Trop d'efforts",
+  'Q10Ar3': "Trop d'efforts",
+  'Q10Ar4': "Trop d'efforts",
   'Q10Ar5': 'Ne connais pas assez',
   'Q10Ar6': 'Ne connais pas assez',
-  'Q10Ar7': "Trop d'effort",
+  'Q10Ar7': "Trop d'efforts",
   'Q10Ar8': "Insatisfait de l'offre",
   'Q10Ar9': "Insatisfait de l'offre",
   'Q10Ar10': "Par souci d'hygiène",
@@ -24,7 +24,7 @@ const Q10Alabels: LabelMap = {
   'Q10Ar13': "Par souci d'hygiène",
   'Q10Ar14': 'Trop coûteux',
   'Q10Ar15': "Manque d'information sur les produits",
-  'Q10Ar16': "Trop d'effort",
+  'Q10Ar16': "Trop d'efforts",
   'Q10Ar17': "Insatisfait de l'offre",
   'Q10Ar18': "Appréciation des emballages",
   'Q10Ar19': 'Trop coûteux',
@@ -590,7 +590,7 @@ export class PreprocessService {
   }
 
   getQ10AChoices(): string[] {
-    return ['Manque de disponibilité',"Trop d'effort",'Trop coûteux','Ne connais pas assez',
+    return ['Manque de disponibilité',"Trop d'efforts",'Trop coûteux','Ne connais pas assez',
     "Insatisfait de l'offre", "Par souci d'hygiène", "Manque d'information sur les produits",
     "Appréciation des emballages", "Pas besoin de grande quantité", "Autre"];
   }
