@@ -27,12 +27,6 @@ export class VizService {
       .attr("xmlns", "http://www.w3.org/2000/svg")
   }
 
-  unSetCanvasSize (graphId: string) {
-    d3.select(graphId)
-      .attr('width', 0)
-      .attr('height', 0)
-  }
-
   appendAxes (g: any) {
     g.append('g')
       .attr('class', 'x axis')
@@ -98,6 +92,18 @@ export class VizService {
       .attr('text-anchor', 'middle')
       .text(title)
     }
+  }
+
+  placeClientWallTitle (g: any, title: string, width: number) {
+    g.append('text')
+      .attr('class', 'title')
+      .attr('x', width/2)
+      .attr('y', -20)
+      .style('font-size', '40px')
+      .style('font-weight', 'bold')
+      .style('text-anchor', 'middle')
+      .style('margin-bottom', '30px')
+      .text(title)
   }
 
   positionLabels (g: any, width: number, height: number) {
@@ -535,13 +541,17 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     .data(data.features)
     .enter()
     .append('path')
+    .attr('transform', 'translate(-60,0)')
     .attr('d', path)
     .each((d: any, i: any) => {
       const centroid = path.centroid(d.geometry)
+      if(provinceAnswers[i].value == 0){
+        return;
+      }
 
       g.append('g')
         .attr('id', 'map-label')
-        .attr('transform', 'translate(' + centroid[0] + ',' + centroid[1] + ')')
+        .attr('transform', 'translate(' + (centroid[0] - 60) + ',' + centroid[1] + ')')
         .append('text')
         .attr('class','name')
         .text(function(){
@@ -558,10 +568,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       const province = provinceAnswers.find((province) => {
         return province.province == d.properties.name;
       })
-      if(province!.answer == "Aucune réponse"){
-        return 0;
+      if(province!.value == 0){
+        return 'white';
       }
-      const R = d3.scaleLinear().domain([30, 60]).range([220, 0]);
+      const R = d3.scaleLinear().domain([30, 60]).range([250, 0]);
       const G = d3.scaleLinear().domain([30, 60]).range([0, 220]);
       return 'rgba('+ (R(province!.value)) +', '+ (G(province!.value)) +', 0,1)';
     })
