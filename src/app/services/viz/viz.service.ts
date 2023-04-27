@@ -586,7 +586,77 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     })
   }
 
+  createScale() {
+    // Select the body element
+    // var body = d3.select(".allScales .scales");
+    // console.log(body)
+
+    // // Create the scale container
+    // var scale = body.append("div")
+    //     .attr("class", "scale");
+
+    // // Create the left plate
+    // var leftPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the left dish and piles
+    // var leftDish = leftPlate.append("div")
+    //     .attr("class", "dish");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile0");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile1");
+
+    // // Create the beam image
+    // scale.append("img")
+    //     .attr("class", "beam")
+    //     .attr("src", "assets/images/Accolade.png");
+
+    // // Create the right plate
+    // var rightPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the right dish and piles
+    // var rightDish = rightPlate.append("div")
+    //     .attr("class", "dish");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile2");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile3");
+
+    // // Create the bar container
+    // var bar = body.append("div")
+    //     .attr("class", "bar");
+
+    // // Create the stand and stander elements
+    // bar.append("div")
+    //     .attr("class", "stand");
+
+    // bar.append("div")
+    //     .attr("class", "stander");
+
+    // // Create the image container
+    // var imageContainer = body.append("div")
+    //     .style("position", "absolute")
+    //     .style("top", "150px")
+    //     .style("left", "50%")
+    //     .style("transform", "translateX(-50%)");
+
+    // // Create the image element
+    // imageContainer.append("img")
+    //     .attr("src", "assets/images/velo.png")
+    //     .style("width", "200px")
+    //     .style("height", "50px");
+
+  }
+
   drawScale(data: ScalesDataSetup) {
+    
+      this.createScale();
 
       const yes = data.vracReturnValue + data.nonVracReturnValue;
       const no = 2 - yes;
@@ -615,9 +685,9 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   
   
   rotateScale(degrees: number) {
-    const scale = d3.select("#scale");
+    const scale = d3.select(".scale");
     // const beam = d3.select("#scale .beam");
-    const plates = d3.selectAll("#scale .plate");
+    const plates = d3.selectAll(".scale .plate");
     // if(scale && scale.node()){
     //   const middleX = ((scale.node()! as any).getBoundingClientRect().right + (scale.node()! as any).getBoundingClientRect().left) / 2 - (scale.node()! as any).getBoundingClientRect().width / 2;
     //   const middleY = ((scale.node()! as any).getBoundingClientRect().top + (scale.node()! as any).getBoundingClientRect().bottom) / 2 - (scale.node()! as any).getBoundingClientRect().height / 2;
@@ -632,7 +702,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
   
   addImages(number: number, id: string, src: string) {
-    const container = d3.select(`#${id}`);
+    const container = d3.select(`.${id}`);
     let marginTop = -20;
   
     container.selectAll("img")
@@ -649,7 +719,4 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       })
       .style("display", "block");
   }
-
-
-
 }
