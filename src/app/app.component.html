@@ -3,10 +3,10 @@
     <h1>Visualisation Zéro déchets du biodôme</h1>
   </div>
   <div class="main-buttons">
-    <a class="circle-link" (click)="showPhone(true)" target="_blank" rel="noopener">
+    <a [ngClass]="showingPhone ? 'chosen-circle-link' : 'circle-link'" (click)="showPhone(true)" (click)="showPhone(true)" target="_blank" rel="noopener">
         Visualisation du téléphone
     </a>
-    <a class="circle-link" (click)="showPhone(false)" target="_blank" rel="noopener">
+    <a [ngClass]="showingPhone ? 'circle-link' : 'chosen-circle-link'" (click)="showPhone(true)" (click)="showPhone(false)" target="_blank" rel="noopener">
         Visualisation murale
     </a>
   </div>

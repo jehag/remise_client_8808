@@ -603,7 +603,7 @@ export class PreprocessService {
   fixChoices(choicesList:string[]): Map<number,string> {
     let choices: Map<number,string> = new Map();
     for(let i = 0; i < choicesList.length; i++){
-      choices.set(i, choicesList[i]);
+      choices.set(i + 1, choicesList[i]);
     }
     return choices;
   }
@@ -633,6 +633,10 @@ export class PreprocessService {
       return question.symbol == 'Q10An1'
     })!);
     questions.push(vrac);
+    questions.push(vrac);
+    questions.push(this.formattedQuestions.find((question) => {
+      return question.symbol == 'Q8r1'
+    })!);
     return questions;
   }
 

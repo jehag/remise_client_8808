@@ -1,6 +1,7 @@
   .dashboard-title {
     flex-direction: row;
     display: flex;
+    margin: 16px;
   }
 
   .dashboard {
@@ -39,4 +40,27 @@
   flex-direction: row;
   justify-content: space-between;
   display: flex;
+}
+
+.chosen-circle-link {
+  height: 40px;
+  width: 200px;
+  border-radius: 40px;
+  margin: 16px;
+  background-color: rgb(87, 87, 246);
+  border: 1px solid rgb(87, 87, 246);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: 1s ease-out;
+  color:white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.chosen-circle-link:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 }

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 import { Margin } from 'src/app/interfaces/margin';
-import { legendColor, legendSymbol } from 'd3-svg-legend';
+import { legendColor } from 'd3-svg-legend';
 import { QuestionData } from 'src/app/interfaces/question-data';
-import { QuestionDataHelper } from 'src/app/interfaces/question-data-helper';
-import { GenderDataSetup } from 'src/app/interfaces/gender-data-setup';
 import { MapDataSetup } from 'src/app/interfaces/map-data-setup';
 import { ScalesDataSetup } from 'src/app/interfaces/scales-data-setup';
 
@@ -41,7 +39,7 @@ export class VizService {
   
     g.append('g')
       .attr('class', 'y axis')
-      .style('width', 150)
+      .style('transform', 'translate(10px, 0px)')
   }
 
   appendGraphLabels (g: any) {
@@ -117,27 +115,28 @@ export class VizService {
   }
 
   drawYAxis (yScale: any) {
+    const maxLineLength = 35;
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '.0r']) as any);
     d3.select('.y.axis').selectAll('.tick').select('text').text(function(d: any) {
-      if(d.length <= 30){
+      if(d.length <= maxLineLength){
         return d;
       } else {
         const splitLabel = d.split(' ');
         let labelStart: string = '';
         let i: number = 0;
-        while(labelStart.length + splitLabel[i].length < 30){
+        while(labelStart.length + splitLabel[i].length < maxLineLength){
           labelStart += ' ' + splitLabel[i];
           i++;
         }
         return labelStart;
       }
     }).each(function(d: any, i: any, nodes: any) {
-      if(d.length > 30){
+      if(d.length > maxLineLength){
         let words: string[] = d.split(' ');
         let labelStart: string = '';
         let currentWordIndex: number = 0;
-        while(labelStart.length + words[currentWordIndex].length < 30){
+        while(labelStart.length + words[currentWordIndex].length < maxLineLength){
           labelStart += ' ' + words[currentWordIndex];
           currentWordIndex++;
         }
@@ -145,7 +144,7 @@ export class VizService {
         while(currentWordIndex <= words.length - 1){
           let line: string = words[currentWordIndex];
           currentWordIndex++;
-          while(words[currentWordIndex] && line.length + words[currentWordIndex].length < 30 && currentWordIndex <= words.length - 1){
+          while(words[currentWordIndex] && line.length + words[currentWordIndex].length < maxLineLength && currentWordIndex <= words.length - 1){
             line = line + ' ' + words[currentWordIndex];
             currentWordIndex++;
           }
@@ -178,7 +177,7 @@ export class VizService {
   drawLegend (g: any, width: number, colorScale: any) {
     g.append('g')
       .attr('class', 'legendOrdinal')
-      .attr('transform', 'translate(' + (width + 20) + ', 200)')
+      .attr('transform', 'translate(' + (width + 30) + ', 200)')
   
     var legendOrdinal = legendColor()
       .shape('path', d3.symbol().type(d3.symbolCircle).size(300)()!)
@@ -198,7 +197,8 @@ export class VizService {
       .attr("y", function(d: QuestionData) { return yScale(d.label); })
       .style('fill', function (d: QuestionData) { return d.label == userChoice? 'orange': 'green'; })
       .attr("width", function(d: QuestionData) { return xScale(d.value); })
-      .attr("height", yScale.bandwidth());
+      .attr("height", yScale.bandwidth())
+      .attr('x', '10px')
   }
 
   drawTupperwareBars(g:any, data: QuestionData[], xScale:any, yScale:any) {
@@ -220,7 +220,6 @@ export class VizService {
       .style("transform", "translateX(50%)")
       .style("width", function(d: QuestionData) { return xScale.bandwidth() + "px"; })
       .style("height", function(d: QuestionData) { return yScale(0) + "px"; })
-      // .style("background", function(d: any, i: any) { return "red"; })
       .attr("class", "column")
       .each(function (this: any, d: any, index: any) {
         let container_sizes: any[] = [];
@@ -241,6 +240,10 @@ export class VizService {
           .style('animation', function(d: any) { return (Math.random() < 0.5 ? "fall-right": "fall-left") + " 2s linear backwards"})
           .style('animation-delay', function(d: any) { return ((container_sizes.length - d.index -1) * 0.6) + "s"})
       });
+
+      d3.selectAll('.tup').style('background-color', '#BDE1FF');
+      d3.selectAll('.per').style('background-color', 'red');
+      d3.selectAll('.ware').style('background-color', '#F5F5F5').style('border', '3px solid #BDE1FF');
       
   }
 
@@ -263,7 +266,7 @@ export class VizService {
       .data(function(d: any) { return d; })
       .enter()
       .append("rect")
-      .attr("x", function(d: any) { return xScale(Math.round(d[0])); })
+      .attr("x", function(d: any) { return xScale(Math.round(d[0])) + 10; })
       .attr("y", function(d: any) { return yScale(d.data.label); })
       .attr("height", yScale.bandwidth())
       .attr("width", function(d: any) { return xScale(Math.round(d[1])) - xScale(Math.round(d[0]));})
@@ -274,7 +277,7 @@ export class VizService {
           .text(function() {
             return Math.round(d.data[groupLabels[currentGroup]]) + "%"
           })
-          .attr("x", xScale(d[0]) + (xScale(d[1]) - xScale(d[0])) / 2)
+          .attr("x", (xScale(d[0]) + (xScale(d[1]) - xScale(d[0])) / 2) + 10)
           .attr("y", yScale(d.data.label) + yScale.bandwidth() / 2)
           .attr("text-anchor", "middle")
           .attr("dy", ".35em")
@@ -424,9 +427,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
     const pyramid = d3.select(".pyramid-container");
 
-    pyramid.append('text')
-
-    let currentWidth: number = 0;
+    pyramid.style("margin-top", '50px')
 
     pyramid.selectAll(".pyramid-level")
       .data(data)
@@ -442,7 +443,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style("height", 0)
       .append("span")
       .text((d: any, i: any , nodes: any) => {
-        const letterSize: number = 6;
+        const letterSize: number = 7;
         const currentWidth: number = parseInt(nodes[i].parentNode.style.width.split('p')[0]);
         if(d.length * letterSize < currentWidth){
           return d;
@@ -479,11 +480,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
               return line;
             })
             .style("color", "#000")
-            .style("font-size", "16px")
+            .style("font-size", "18px")
             .style("position", "absolute")
             .style("left", "0")
             .style("right", "0")
-            .style("transform", "translateY(-" + (200 - substringOffset) + "%)")
+            .style("transform", "translateY(-" + (175 - substringOffset) + "%)")
             .attr('dy', '0.64em')
           substringOffset += 70;
         }
@@ -491,11 +492,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
       })
       .style("color", "#000")
-      .style("font-size", "16px")
+      .style("font-size", "18px")
       .style("position", "absolute")
       .style("left", "0")
       .style("right", "0")
-      .style("transform", "translateY(-200%)");
+      .style("transform", "translateY(-175%)");
   
     pyramid.append("div")
       .style('width', '0')
@@ -551,12 +552,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         .style('font-size', '14')
         .style('font-weight', 'bold')
         .style('stroke', 'black')
+        .style('fill', 'black')
     })
-    // .attr('fill', function(d: any){ 
-    //   const province = provinceAnswers.find((province) => {
-    //     return province.province == d.properties.name;
-    //   })
-    //   return colorScale(province!.answer)})
     .attr('fill', function(d: any) {
       const province = provinceAnswers.find((province) => {
         return province.province == d.properties.name;
@@ -564,8 +561,9 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       if(province!.answer == "Aucune réponse"){
         return 0;
       }
-      const opacity = d3.scaleLinear().domain([30, 60]).range([0, 100]);
-      return 'rgba(0, 154, 0,' + (opacity(province!.value) / 100) + ')';
+      const R = d3.scaleLinear().domain([30, 60]).range([220, 0]);
+      const G = d3.scaleLinear().domain([30, 60]).range([0, 220]);
+      return 'rgba('+ (R(province!.value)) +', '+ (G(province!.value)) +', 0,1)';
     })
     .style('stroke', 'black')
     .style('stroke-width', '0.5')
