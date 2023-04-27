@@ -1,8 +1,8 @@
 <div class="main-buttons">
-    <a class="circle-link" (click)="findUserData(true)" target="_blank" rel="noopener">
+    <a [ngClass]="characterChosen && isMan ? 'chosen-circle-link' : 'circle-link'" (click)="findUserData(true)" target="_blank" rel="noopener">
         Homme de 60 ans
     </a>
-    <a class="circle-link" (click)="findUserData(false)" target="_blank" rel="noopener">
+    <a [ngClass]="characterChosen && !isMan ? 'chosen-circle-link' : 'circle-link'" (click)="findUserData(false)" target="_blank" rel="noopener">
         Femme de 20 ans
     </a>
 </div>

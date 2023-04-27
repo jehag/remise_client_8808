@@ -16,7 +16,8 @@ enum GraphType {
   CitySize = 1,
   Pyramid = 2,
   Tupperware = 3,
-  Scales = 4
+  Scales = 4,
+  Circles = 5
 }
 enum Province {
   BritishColumbia = 0,
@@ -56,14 +57,14 @@ export class ClientWallComponent implements OnInit {
   }
 
   margin: Margin = {
-    top: 75,
+    top: 100,
     right: 200,
     bottom: 100,
-    left: 150
+    left: 250
   }
   
   svgSize = {
-    width: 1000,
+    width: 1100,
     height: 600
   }
 
@@ -104,6 +105,9 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Scales;
         break;
       case GraphType.Scales:
+        this.graphType = GraphType.Circles
+        break;
+      case GraphType.Circles:
         this.graphType = GraphType.Map
         break;
     }
@@ -112,7 +116,7 @@ export class ClientWallComponent implements OnInit {
   previousGraph(){
     switch (this.graphType){
       case GraphType.Map:
-        this.graphType = GraphType.Scales;
+        this.graphType = GraphType.Circles;
         break;
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
@@ -126,6 +130,9 @@ export class ClientWallComponent implements OnInit {
       case GraphType.Scales:
         this.graphType = GraphType.Tupperware
         break;
+      case GraphType.Circles:
+        this.graphType = GraphType.Scales
+        break;
     }
   }
 
@@ -138,33 +145,22 @@ export class ClientWallComponent implements OnInit {
     this.graphType = GraphType.Tupperware;
     this.createTupperwareGraph();
     this.graphType = GraphType.Scales;
-    this.createScaleGraph();
+    this.createScalesGraph();
+    this.graphType = GraphType.Circles;
+    this.createCirclesGraph();
     this.graphType = GraphType.Map;
   }
 
   createMapGraph(){
-    // const provinceAnswers: MapDataSetup[] = this.getMapData();
-    // const choices: string[] = ['Oui', 'Non', 'Aucune réponse'];
-    // this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#client-wall-chart');
-    // var projection = this.vizService.getProjection(this.mapData, this.svgSize.width, this.svgSize.height);
-    // var path = this.vizService.getPath(projection);
-    // const g = this.vizService.generateG(this.margin, '.client-wall-graph');
-    // const colorscale = this.scalesService.setColorScale(choices, ["#FF4136", "#FF851B", "#EEA47FFF"]);
-    // this.vizService.clientMapBackground(g, this.mapData, path, colorscale, provinceAnswers);
-    // this.vizService.placeTitle(g, 'Faites-vous votre épicerie en vrac?', this.graphSize.width);
-    // this.vizService.drawMapLegend(g, this.graphSize.width, colorscale);
 
     const provinceAnswers: MapDataSetup[] = this.getMapData();
-    //const choices: string[] = ['Oui', 'Non', 'Aucune réponse'];
     this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#client-wall-chart');
     var projection = this.vizService.getProjection(this.mapData, this.svgSize.width, this.svgSize.height);
     var path = this.vizService.getPath(projection);
     const g = this.vizService.generateG(this.margin, '.client-wall-graph');
     const color: string = "#FF4136";
     this.vizService.clientMapBackground(g, this.mapData, path, color, provinceAnswers);
-    //this.vizService.placeTitle(g, 'Faites-vous votre épicerie en vrac?', this.graphSize.width);
-    this.vizService.placeTitle(g, "Combien de gens font leur épicerie en vrac?", this.graphSize.width);
-    //this.vizService.drawMapLegend(g, this.graphSize.width, color);
+    this.vizService.placeTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
   }
 
   getQuestionData(symbol: string, maxNumber: number) : QuestionDataHelper[] {
@@ -205,43 +201,12 @@ export class ClientWallComponent implements OnInit {
       questionDataList[i] = this.preprocessService.getYesOrNoQ5Data(questionDataList[i]);
     }
 
-    // let mostPopularAnswers: string[] = [];
-    // for(let questionDataHelper of questionDataList){
-    //   mostPopularAnswers.push(this.preprocessService.getMostPopularAnswer(questionDataHelper.questionData));
-    // }
-
-    // let mostPopularAnswersValue: number[] = [];
-    // for(let i = 0; i < questionDataList.length; i++){
-    //   const value = questionDataList[i].questionData.find((questionData) => {
-    //     return questionData.label == mostPopularAnswers[i];
-    //   })
-    //   if(value){
-    //     mostPopularAnswersValue.push(value.value);
-    //   } else {
-    //     mostPopularAnswersValue.push(0);
-    //   }
-    // }
-
     let labels: string[] = [];
     for(let province of this.mapData.features){
       labels.push(province.properties.name);
     }
 
     let mapData:MapDataSetup[] = [];
-    // mapData.push({province: labels[0], answer: mostPopularAnswers[Province.Quebec], value: mostPopularAnswersValue[Province.Quebec]});
-    // mapData.push({province: labels[1], answer: mostPopularAnswers[Province.NewFoundLand], value: mostPopularAnswersValue[Province.NewFoundLand]});
-    // mapData.push({province: labels[2], answer: mostPopularAnswers[Province.BritishColumbia], value: mostPopularAnswersValue[Province.BritishColumbia]});
-    // mapData.push({province: labels[3], answer: mostPopularAnswers[Province.Nunavut], value: mostPopularAnswersValue[Province.Nunavut]});
-    // mapData.push({province: labels[4], answer: mostPopularAnswers[Province.NorthwestTerritories], value: mostPopularAnswersValue[Province.NorthwestTerritories]});
-    // mapData.push({province: labels[5], answer: mostPopularAnswers[Province.NewBrunswick], value: mostPopularAnswersValue[Province.NewBrunswick]});
-    // mapData.push({province: labels[6], answer: mostPopularAnswers[Province.NovaScotia], value: mostPopularAnswersValue[Province.NovaScotia]});
-    // mapData.push({province: labels[7], answer: mostPopularAnswers[Province.Saskatchewan], value: mostPopularAnswersValue[Province.Saskatchewan]});
-    // mapData.push({province: labels[8], answer: mostPopularAnswers[Province.Alberta], value: mostPopularAnswersValue[Province.Alberta]});
-    // mapData.push({province: labels[9], answer: mostPopularAnswers[Province.PrinceEdward], value: mostPopularAnswersValue[Province.PrinceEdward]});
-    // mapData.push({province: labels[10], answer: mostPopularAnswers[Province.Yukon], value: mostPopularAnswersValue[Province.Yukon]});
-    // mapData.push({province: labels[11], answer: mostPopularAnswers[Province.Manitoba], value: mostPopularAnswersValue[Province.Manitoba]});
-    // mapData.push({province: labels[12], answer: mostPopularAnswers[Province.Ontario], value: mostPopularAnswersValue[Province.Ontario]});
-    
     mapData.push({province: labels[0], answer: questionDataList[Province.Quebec].questionData[0].label, value: questionDataList[Province.Quebec].questionData[0].value});
     mapData.push({province: labels[1], answer: questionDataList[Province.NewFoundLand].questionData[0].label, value: questionDataList[Province.NewFoundLand].questionData[0].value});
     mapData.push({province: labels[2], answer: questionDataList[Province.BritishColumbia].questionData[0].label, value: questionDataList[Province.BritishColumbia].questionData[0].value});
@@ -294,14 +259,15 @@ export class ClientWallComponent implements OnInit {
   createPyramidGraph() {
     const pyramidData: QuestionDataHelper = this.getPyramidData();
     const choices: string[] = pyramidData.questionData.map(function(d) {return d.label});
-    const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9", "#B10DC9", "#FF007F", "#A0522D", "#AAAAAA", "#39CCCC"];
+    const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9"];
+    //const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9", "#B10DC9", "#FF007F", "#A0522D", "#AAAAAA", "#39CCCC"];
     const colorScale = this.scalesService.setColorScale(choices, colors);
-    this.vizService.placeTitle(d3.select(".pyramid-container"), 'Raisons principales pour ne pas faire de vrac', 1000)
+    this.vizService.placeTitle(d3.select(".pyramid-container"), 'Les "excuses" pour ne pas faire du vrac', 1000)
     this.vizService.drawPyramid(choices, colorScale);
   }
 
   getPyramidData() {
-    let questionDataList: QuestionDataHelper[] = this.getQuestionData('Q10An1', 1 );
+    let questionDataList: QuestionDataHelper[] = this.getQuestionData('Q10An1', 1);
     questionDataList[0].questionData.sort((a, b) => {
       return b.value - a.value;
     })
@@ -317,17 +283,17 @@ export class ClientWallComponent implements OnInit {
 
   getTupperwareData(labels: string[]): QuestionData[] {
     this.checkBoxChoices.myAge = true;
-    const questionDataList: QuestionDataHelper[] = this.getQuestionData('age', 5);
+    const questionDataList: QuestionDataHelper[] = this.getQuestionData('age', 6);
     this.checkBoxChoices.myAge = false;
 
-    for(let i = 0; i < questionDataList.length; i++){
+    for(let i = 1; i < questionDataList.length; i++){
       questionDataList[i] = this.preprocessService.getYesOrNoQ5Data(questionDataList[i]);
     }
     
     let data: QuestionData[] = [];
-    for(let i = 0; i < labels.length; i++){
+    for(let i = 1; i < labels.length + 1; i++){
       data.push({
-        label: labels[i],
+        label: labels[i - 1],
         value: questionDataList[i].questionData[0].value
       })
     }
@@ -350,7 +316,12 @@ export class ClientWallComponent implements OnInit {
     this.vizService.drawTupperwareBars(g, dataset, xScale, yScale);
   }
 
-  createScaleGraph(){
+  createScalesGraph(){
+    const vehiculesData: ScalesDataSetup[] = this.getScalesData();
+    this.vizService.drawScale(vehiculesData[0]);
+  }
+
+  getScalesData(): ScalesDataSetup[]{
     let vehiculesData: ScalesDataSetup[] = [];
     const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
     for(let i = 1; i <= 5; i++){
@@ -362,6 +333,20 @@ export class ClientWallComponent implements OnInit {
         nonVracReturnValue: this.preprocessService.getReturnableValue(separatedVehiculeData[1])
       })
     }
-    this.vizService.drawScale(vehiculesData[0]);
+    return vehiculesData;
+  }
+
+  createCirclesGraph() {
+    const circlesData: QuestionData[] = this.getCirclesData();
+  }
+
+  getCirclesData(): QuestionData[] {
+    const user: any = [];
+    let circlesData: QuestionData[] = [];
+    for(let choice of this.questionsList[this.graphType].choices.values()){
+      const questionDataHelper: QuestionDataHelper = this.preprocessService.getQuestionData(choice, user, this.checkBoxChoices);
+      circlesData.push({label: choice.split(' - ')[0], value: (questionDataHelper.questionData[3].value + questionDataHelper.questionData[4].value)})
+    }
+    return circlesData;
   }
 }

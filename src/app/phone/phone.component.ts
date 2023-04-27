@@ -16,6 +16,7 @@ export class PhoneComponent implements OnInit {
 
   selectedQuestion: string = "";
   characterChosen: boolean = false;
+  isMan: boolean = false;
   isThemeQuestion: boolean = false;
   themeQuestionsList: string[] = [];
   selectedSubQuestion: string = "";
@@ -30,6 +31,23 @@ export class PhoneComponent implements OnInit {
     myLanguage: true,
     myMoney: true,
     myCivilState: true,
+  }
+
+  margin: Margin = {
+    top: 100,
+    right: 200,
+    bottom: 100,
+    left: 250
+  }
+
+  svgSize = {
+    width: 1100,
+    height: 600
+  }
+
+  graphSize = {
+    width: this.svgSize.width - this.margin.right - this.margin.left,
+    height: this.svgSize.height - this.margin.bottom - this.margin.top
   }
 
   constructor(private preprocessService: PreprocessService, 
@@ -56,6 +74,7 @@ export class PhoneComponent implements OnInit {
 
   findUserData(man: boolean) {
     this.characterChosen = true;
+    this.isMan = man;
     this.user = this.preprocessService.getUserData(man);
     if(this.isShowingGraph){
       this.getQuestionData();
@@ -91,39 +110,23 @@ export class PhoneComponent implements OnInit {
   createGraph(questionDataHelper: QuestionDataHelper, questionName: string, symbol: string){
     this.isShowingGraph = true;
     this.vizService.deleteGraph('#bar-chart');
-    const margin: Margin = {
-      top: 75,
-      right: 200,
-      bottom: 100,
-      left: 150
-    }
 
-    let svgSize = {
-      width: 1000,
-      height: 600
-    }
+    this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#bar-chart');
 
-    let graphSize = {
-      width: svgSize.width - margin.right - margin.left,
-      height: svgSize.height - margin.bottom - margin.top
-    }
-
-    this.vizService.setCanvasSize(svgSize.width, svgSize.height, '#bar-chart');
-
-    const g = this.vizService.generateG(margin, '.graph');
+    const g = this.vizService.generateG(this.margin, '.graph');
     this.vizService.appendAxes(g);
     this.vizService.appendGraphLabels(g);
-    this.vizService.placeTitle(g, questionName, graphSize.width);
-    this.vizService.positionLabels(g, graphSize.width, graphSize.height);
+    this.vizService.placeTitle(g, questionName, this.graphSize.width);
+    this.vizService.positionLabels(g, this.graphSize.width, this.graphSize.height);
 
     const choice = this.preprocessService.getChoiceFromData(symbol, this.user[symbol])
 
-    const xScale = this.scalesService.setXScale(graphSize.width);
-    const yScale = this.scalesService.setYScale(graphSize.height, questionDataHelper.questionData);
+    const xScale = this.scalesService.setXScale(this.graphSize.width);
+    const yScale = this.scalesService.setYScale(this.graphSize.height, questionDataHelper.questionData);
     const colorScale = this.scalesService.setColorScale(['Votre réponse'], ['orange']);
-    this.vizService.drawXAxis(xScale, graphSize.height);
+    this.vizService.drawXAxis(xScale, this.graphSize.height);
     this.vizService.drawYAxis(yScale);
-    this.vizService.drawLegend(g, graphSize.width, colorScale);
+    this.vizService.drawLegend(g, this.graphSize.width, colorScale);
     this.vizService.drawBars(g, questionDataHelper.questionData, xScale, yScale, choice);
     this.amountOfData = questionDataHelper.sumOfValues;
   }
