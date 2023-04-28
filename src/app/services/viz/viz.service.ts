@@ -40,19 +40,19 @@ export class VizService {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   appendTupperwareGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'y axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
 
     g.append('text')
       .text("Tranches d'âge")
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   placeTitle (g: any, title: string, width: number) {
@@ -94,11 +94,11 @@ export class VizService {
     }
   }
 
-  placeClientWallTitle (g: any, title: string, width: number) {
+  placeClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.append('text')
       .attr('class', 'title')
       .attr('x', width/2)
-      .attr('y', -20)
+      .attr('y', height)
       .style('font-size', '40px')
       .style('font-weight', 'bold')
       .style('text-anchor', 'middle')
@@ -112,6 +112,14 @@ export class VizService {
   
     g.selectAll('.x.axis-text')
       .attr('transform', 'translate(' + width / 2 + ',' + (height + 50) + ')')
+  }
+
+  positionClientWallLabels (g: any, yHeight: number, xWidth : number, xHeight: number) {
+    g.selectAll('.y.axis-text')
+      .attr('transform', 'translate( -50 ,' + yHeight / 2 + '), rotate(-90)')
+  
+    g.selectAll('.x.axis-text')
+      .attr('transform', 'translate(' + xWidth / 2 + ',' + (xHeight + 50) + ')')
   }
 
   drawXAxis (xScale: any, height: number) {
@@ -247,10 +255,26 @@ export class VizService {
           .style('animation-delay', function(d: any) { return ((container_sizes.length - d.index -1) * 0.6) + "s"})
       });
 
+      const images = ["apple.png", "brocolli.png", "chicken.png", "spaghetti.png"]
+
       d3.selectAll('.tup').style('background-color', '#BDE1FF');
       d3.selectAll('.per').style('background-color', 'red');
-      d3.selectAll('.ware').style('background-color', '#F5F5F5').style('border', '3px solid #BDE1FF');
-      
+
+      d3.selectAll('.ware')
+        .style('background-color', '#F5F5F5')
+        .style('border', '3px solid #BDE1FF')
+        .each(function(d: any, i:any, nodes:any) {
+          if (parseInt(d3.select(nodes[i].parentNode).style('height').replace("%", "")) >= 10) {
+            const randomNum = Math.floor(Math.random() * images.length);
+            const imgPath = `assets/images/tup/${images[randomNum]}`;
+            d3.select(this)
+              .style('background-image', `url(${imgPath})`)
+              .style('background-size', '25px 25px')
+              .style('background-repeat', 'no-repeat')
+              .style('background-position', 'center');
+          }
+      });
+
   }
 
   deleteGraph(graphId: string){
@@ -583,6 +607,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   drawTupperwareYAxis (yScale: any) {
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
+
+    d3.select('.y.axis').selectAll('.tick').select('text').style('font-size', '20px');
   }
 
   drawTupperwareXAxis (xScale: any, height: number) {
@@ -591,9 +617,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .call(d3.axisBottom(xScale).tickSizeOuter(0).tickArguments([5, '.0r']) as any);
     d3.select('.x.axis').selectAll('.tick').select('text').text(function(d: any) {
         return d;
-    })
+    }).style('font-size', '20px');
   }
 
+<<<<<<< HEAD
   // drawScale(data: ScalesDataSetup) {
   //     const yes = data.vracReturnValue + data.nonVracReturnValue;
   //     const no = 2 - yes;
@@ -604,10 +631,83 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   //     ou un oui/non */
       
   //     const numberOfElements = 5
+=======
+  createScale() {
+    // Select the body element
+    // var body = d3.select(".allScales .scales");
+    // console.log(body)
+
+    // // Create the scale container
+    // var scale = body.append("div")
+    //     .attr("class", "scale");
+
+    // // Create the left plate
+    // var leftPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the left dish and piles
+    // var leftDish = leftPlate.append("div")
+    //     .attr("class", "dish");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile0");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile1");
+
+    // // Create the beam image
+    // scale.append("img")
+    //     .attr("class", "beam")
+    //     .attr("src", "assets/images/Accolade.png");
+
+    // // Create the right plate
+    // var rightPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the right dish and piles
+    // var rightDish = rightPlate.append("div")
+    //     .attr("class", "dish");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile2");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile3");
+
+    // // Create the bar container
+    // var bar = body.append("div")
+    //     .attr("class", "bar");
+
+    // // Create the stand and stander elements
+    // bar.append("div")
+    //     .attr("class", "stand");
+
+    // bar.append("div")
+    //     .attr("class", "stander");
+
+    // // Create the image container
+    // var imageContainer = body.append("div")
+    //     .style("position", "absolute")
+    //     .style("top", "150px")
+    //     .style("left", "50%")
+    //     .style("transform", "translateX(-50%)");
+
+    // // Create the image element
+    // imageContainer.append("img")
+    //     .attr("src", "assets/images/velo.png")
+    //     .style("width", "200px")
+    //     .style("height", "50px");
+
+  }
+
+  drawScale(data: ScalesDataSetup) {
+      const numberOfElements = 5
+>>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
       
   //     const vracYes = Math.round(data.vracReturnValue * numberOfElements)
   //     const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
 
+<<<<<<< HEAD
   //     d3.select('.allScales').attr('y', 300);
       
       
@@ -669,11 +769,46 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     const container = d3.select(scaleId).select(pileid);
     let marginTop = -20;
   
+=======
+      d3.select('.allScales').attr('y', 300);
+
+      let delay = 0;
+      this.addImages(vracYes, "pile0", "assets/images/happy_tupperware.png", delay);
+      delay += vracYes;
+      this.addImages(noVracYes, "pile1", "assets/images/garbage.png", delay);
+      delay += noVracYes;
+      this.addImages(5 - vracYes, "pile2", "assets/images/happy_tupperware.png", delay);
+      delay += 5 - vracYes;
+      this.addImages(5 - noVracYes, "pile3", "assets/images/garbage.png", delay);
+      delay += 5 - noVracYes;
+  }
+  
+  
+  rotateScale(id: string, degrees: number, delay: number) {
+    setTimeout(()=>{
+      const scale = d3.select("#" + id);
+      const plates = d3.selectAll("#" + id + " .plate");
+
+      scale.style("transform-origin", "top left")
+        .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
+      
+      plates.each(function() {
+        d3.select(this).style("transform-origin", "top left")
+        .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`)
+      });
+    }, delay);
+  }
+  
+  addImages(number: number, id: string, src: string, delay: number) {
+    const container = d3.select(`#${id}`);
+    let start = (delay + number) * 0.6;
+>>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
     container.selectAll("img")
       .data(d3.range(number))
       .enter()
       .append("img")
       .attr("src", src)
+<<<<<<< HEAD
       .attr("width", 20)
       .attr("height", 20)
       .style("margin-top", d => {
@@ -683,5 +818,48 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       })
       .style("display", "block")
       .style("z-index", 9);
+=======
+      .style('position', "relative")
+      .attr("width", 30)
+      .attr("height", 30)
+      .style("display", "block")
+      .style('animation', function(d: any) { return (Math.random() < 0.5 ? "fall-right": "fall-left") + " 2s linear backwards"})
+      .style('animation-delay', function(d: any) { start -= 0.6; return start + "s"});
+  }
+
+  createBalanceAnimation(id: string, data: ScalesDataSetup) {
+    const angle_increments = 7 / 5; /*7 looks to be the perfect value*/
+
+    const delay_increments = 600; /* in ms */
+    
+    const numberOfElements = 5
+    
+    const vracYes = Math.round(data.vracReturnValue * numberOfElements)
+    const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
+
+    let queue: any[] = []    
+
+    const animation = {
+      id: id,
+      state: 0,
+      queue: queue,
+    };
+    
+    let currentAngle = 0;
+    let currentDelay = 800; /* in ms */
+
+    for (let i = 1; i <= vracYes + noVracYes; i++) {
+      currentAngle -= angle_increments;
+      currentDelay += delay_increments;
+      animation.queue.push({angle: currentAngle, delay: currentDelay});
+    }
+    for (let i = 1; i <= numberOfElements * 2 - vracYes - noVracYes; i++) {
+      currentAngle += angle_increments;
+      currentDelay += delay_increments;
+      animation.queue.push({angle: currentAngle, delay: currentDelay});
+    }
+
+    return animation;
+>>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
   }
 }
