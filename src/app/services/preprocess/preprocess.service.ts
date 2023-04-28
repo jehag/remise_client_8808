@@ -686,7 +686,6 @@ export class PreprocessService {
     totalRows.forEach((row) => {
       if(row['Q18r1'] && (row['Q18r1'] == 4 || row['Q18r1'] == 5)){
         crisers++;
-        console.log(row)
       } else if(row['Q18r1'] && (row['Q18r1'] == 1 || row['Q18r1'] == 2)){
         nonCrisers++;
       }

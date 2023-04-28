@@ -346,6 +346,7 @@ export class ClientWallComponent implements OnInit {
 
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
+    this.vizService.drawCircles(circlesData);
   }
 
   getCirclesData(): QuestionData[] {

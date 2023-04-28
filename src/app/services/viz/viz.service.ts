@@ -622,7 +622,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
 
   drawScale(data: ScalesDataSetup[]) {
-    console.log(data)
     d3.select('.allScales').attr('y', 300);
     let scaleXValue = -466;
     d3.selectAll('.scales')
@@ -656,7 +655,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   
   
   rotateScale(scaleName:string, degrees: number, delay: number, scaleXValue: number) {
-    console.log(degrees)
     setTimeout(()=>{
       const scale = d3.select(scaleName)
 
@@ -747,5 +745,22 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }
 
     return animation;
+  }
+
+  drawCircles(data: QuestionData[]){
+    console.log(data)
+    d3.select('.donuts')
+    .selectAll('.pie.animate')
+    .data(data)
+    .each(function (d: QuestionData, i: number, nodes: any) {
+      const value = Math.round(d.value);
+      d3.select(nodes[i])
+        .html(value + '%')
+        .style('--p', value)
+
+      // d3.select(nodes[i])
+      //   .append('text')
+      //   .text(d.label)
+    })
   }
 }
