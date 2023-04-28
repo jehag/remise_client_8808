@@ -73,6 +73,8 @@ export class ClientWallComponent implements OnInit {
     height: this.svgSize.height - this.margin.bottom - this.margin.top
   }
 
+  animations: any[] = []
+
   constructor(private preprocessService: PreprocessService, 
     private vizService: VizService,
     private scalesService: ScalesService) { }
@@ -103,6 +105,7 @@ export class ClientWallComponent implements OnInit {
         break;
       case GraphType.Tupperware:
         this.graphType = GraphType.Scales;
+        this.animate();
         break;
       case GraphType.Scales:
         this.graphType = GraphType.Circles
@@ -131,7 +134,8 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Tupperware
         break;
       case GraphType.Circles:
-        this.graphType = GraphType.Scales
+        this.graphType = GraphType.Scales;
+        this.animate();
         break;
     }
   }
@@ -315,12 +319,16 @@ export class ClientWallComponent implements OnInit {
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
     this.vizService.drawScale(vehiculesData[0]);
+    this.animations.push(this.vizService.createBalanceAnimation("scale", vehiculesData[0]));
   }
 
   getScalesData(): ScalesDataSetup[]{
     let vehiculesData: ScalesDataSetup[] = [];
     const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
     for(let i = 1; i <= 5; i++){
+      if(i == 2 || i == 5){
+        continue;
+      }
       const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
       const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
       vehiculesData.push({
@@ -344,5 +352,14 @@ export class ClientWallComponent implements OnInit {
       circlesData.push({label: choice.split(' - ')[0], value: (questionDataHelper.questionData[3].value + questionDataHelper.questionData[4].value)})
     }
     return circlesData;
+  }
+
+  animate() {
+    for (let animation of this.animations) {
+      this.vizService.rotateScale(animation.id, 0, 0);
+      for (let step of animation.queue) {
+        this.vizService.rotateScale(animation.id, step.angle, step.delay);
+      }
+    }
   }
 }

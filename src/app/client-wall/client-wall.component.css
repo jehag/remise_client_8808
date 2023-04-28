@@ -177,9 +177,6 @@ body {width: 100%; height: 100vh;}
   font-size: 40px;
 }
 
-/* * {margin: 0; padding: 0; box-sizing: border-box;}
-body {width: 100%; height: 100vh; background-color: #262626;} */
-
 /*
 
 
@@ -284,28 +281,37 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
   position: relative;
   top:150%;
 }
+
+.scales {
+  flex-direction: column; 
+  display:flex; 
+  width: 300px;
+}
+
 .scale {
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  width: 400px;
   height: 200px;
   background-color: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.5s ease;
+  /* transition: transform 0.1s linear; */
 }
 
 .plate {
   position: relative;
   width: 100px;
   height: 20px;
+  left: 50px;
+  top: 10px;
   background-color: #ccc;
   border-radius: 0px 0px 100% 100%;
-  transition: transform 0.5s ease;
+  /* transition: transform 0.1s linear; */
   margin-bottom: 40px;
+  transform: translate(-50%, -50%);
 }
 .dish {
   width: 100px;
@@ -315,7 +321,7 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
   border:0px solid;
   border-top: 20px solid #fff;
   border-bottom: 2px solid #fff;
-  transition: transform 0.5s ease;
+  /* transition: transform 0.1s linear; */
   margin-bottom: 30px;
   display: flex;
   justify-content: space-around;
@@ -323,24 +329,32 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
 
 .pile0 {
   order: 1;
+  height: 400px;
+  transform: translateY(-100%);
 }
 
 .pile1 {
   order: 3;
+  height: 400px;
+  transform: translateY(-100%);
 }
 
 .pile2 {
   order: 1;
+  height: 400px;
+  transform: translateY(-100%);
 }
 
 .pile3 {
   order: 3;
+  height: 400px;
+  transform: translateY(-100%);
 }
 
 .beam {
   width: 20px;
   height: 200px;
-  transition: transform 0.5s ease;
+  /* transition: transform 0.5s linear; */
   position: relative;
   transform: rotate(-90deg);
   object-fit: fill;
@@ -380,6 +394,11 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
   transform: rotate(180deg) translate(50%, 50%);
   margin-top: 30px;
   bottom: -45px;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg) translate(-50%, -50%)}
+  100% { transform: rotate(360deg) translate(-50%, -50%)}
 }
 
 /*

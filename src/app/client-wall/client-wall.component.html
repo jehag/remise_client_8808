@@ -88,19 +88,21 @@
   </svg>
 </div>
 
+<<<<<<< HEAD
+=======
 <!-- <div class="allScales" [style.display]="graphType == 4 ? 'flex' : 'none'">
   <div id="scale">
     <div class="plate">
     	<div class="dish">
-      		<div id="pile0"></div>
-      		<div id="pile1"></div>
+      		<div id="pile0" class="column"></div>
+      		<div id="pile1" class="column"></div>
 		  </div>
     </div>
     <img class="beam" src="assets/images/Accolade.png"/>
     <div class="plate">
     	<div class="dish">
-      		<div id="pile2"></div>
-      		<div id="pile3"></div>
+      		<div id="pile2" class="column"></div>
+      		<div id="pile3" class="column"></div>
 		  </div>
     </div>
   </div>
@@ -113,10 +115,10 @@
   </div>
 </div> -->
 
+>>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
 <div class="allScales" [style.display]="graphType == 4 ? 'flex' : 'none'">
-  <div class="scales" style="flex-direction: column; display:flex; width: 600px;">
-
-    <div class="scale">
+  <div class="scales">
+    <div class="scale" id="scale0">
       <div class="plate">
         <div class="dish">
           <div class="pile0"></div>
@@ -140,10 +142,12 @@
     <div style="position: absolute; top: 150px; left: 50%; transform: translateX(-50%);">
       <img src="assets/images/velo.png" style="width:200px;height: 50px;" />
     </div>
+  </div>
 
     <!-- SECOND -->
 
-    <div class="scale">
+  <div class="scales">
+    <div class="scale" id="scale1">
       <div class="plate">
         <div class="dish">
           <div class="pile0"></div>
@@ -167,10 +171,11 @@
     <div style="position: absolute; top: 150px; left: 50%; transform: translateX(-50%);">
       <img src="assets/images/velo.png" style="width:200px;height: 50px;" />
     </div>
+  </div>
 
     <!-- THIRD -->
-
-    <div class="scale">
+  <div class="scales">
+    <div class="scale" id="scale2">
       <div class="plate">
         <div class="dish">
           <div class="pile0"></div>
