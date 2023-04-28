@@ -620,105 +620,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }).style('font-size', '20px');
   }
 
-<<<<<<< HEAD
-  // drawScale(data: ScalesDataSetup) {
-  //     const yes = data.vracReturnValue + data.nonVracReturnValue;
-  //     const no = 2 - yes;
-      
-  //     const deg = 7 * (no - yes) /*7 looks to be the perfect value*/
-  //     this.rotateScale(deg)
-  //   /* Faut rajouter sur le scale un pouce vers le haut à droite et un vers le bas à gauche
-  //     ou un oui/non */
-      
-  //     const numberOfElements = 5
-=======
-  createScale() {
-    // Select the body element
-    // var body = d3.select(".allScales .scales");
-    // console.log(body)
-
-    // // Create the scale container
-    // var scale = body.append("div")
-    //     .attr("class", "scale");
-
-    // // Create the left plate
-    // var leftPlate = scale.append("div")
-    //     .attr("class", "plate");
-
-    // // Create the left dish and piles
-    // var leftDish = leftPlate.append("div")
-    //     .attr("class", "dish");
-
-    // leftDish.append("div")
-    //     .attr("class", "pile0");
-
-    // leftDish.append("div")
-    //     .attr("class", "pile1");
-
-    // // Create the beam image
-    // scale.append("img")
-    //     .attr("class", "beam")
-    //     .attr("src", "assets/images/Accolade.png");
-
-    // // Create the right plate
-    // var rightPlate = scale.append("div")
-    //     .attr("class", "plate");
-
-    // // Create the right dish and piles
-    // var rightDish = rightPlate.append("div")
-    //     .attr("class", "dish");
-
-    // rightDish.append("div")
-    //     .attr("class", "pile2");
-
-    // rightDish.append("div")
-    //     .attr("class", "pile3");
-
-    // // Create the bar container
-    // var bar = body.append("div")
-    //     .attr("class", "bar");
-
-    // // Create the stand and stander elements
-    // bar.append("div")
-    //     .attr("class", "stand");
-
-    // bar.append("div")
-    //     .attr("class", "stander");
-
-    // // Create the image container
-    // var imageContainer = body.append("div")
-    //     .style("position", "absolute")
-    //     .style("top", "150px")
-    //     .style("left", "50%")
-    //     .style("transform", "translateX(-50%)");
-
-    // // Create the image element
-    // imageContainer.append("img")
-    //     .attr("src", "assets/images/velo.png")
-    //     .style("width", "200px")
-    //     .style("height", "50px");
-
-  }
-
-  drawScale(data: ScalesDataSetup) {
-      const numberOfElements = 5
->>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
-      
-  //     const vracYes = Math.round(data.vracReturnValue * numberOfElements)
-  //     const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
-
-<<<<<<< HEAD
-  //     d3.select('.allScales').attr('y', 300);
-      
-      
-  //     this.addImages(vracYes, "pile0", "assets/images/happy_tupperware.png")
-      
-  //     this.addImages(noVracYes, "pile1", "assets/images/garbage.png")
-      
-  //     this.addImages(5 - vracYes, "pile2", "assets/images/happy_tupperware.png")
-      
-  //     this.addImages(5 - noVracYes, "pile3", "assets/images/garbage.png")
-  // }
 
   drawScale(data: ScalesDataSetup[]) {
     console.log(data)
@@ -726,13 +627,12 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     let scaleXValue = -466;
     d3.selectAll('.scales')
       .data(data)
-      .each((d: ScalesDataSetup, i:any, nodes: any) => {
+      .each((d: ScalesDataSetup, i:any) => {
 
         const yes = d.vracReturnValue + d.nonVracReturnValue;
         const no = 2 - yes;
         
         const deg = 7 * (no - yes) /*7 looks to be the perfect value*/
-        this.rotateScale(deg, '#scale' + i, scaleXValue)
       /* Faut rajouter sur le scale un pouce vers le haut à droite et un vers le bas à gauche
         ou un oui/non */
         
@@ -741,84 +641,70 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         const vracYes = Math.round(d.vracReturnValue * numberOfElements)
         const noVracYes = Math.round(d.nonVracReturnValue * numberOfElements)
         
-        
-        this.addImages(vracYes, '#scale' + i, ".pile0", "assets/images/happy_tupperware.png")
-        
-        this.addImages(noVracYes, '#scale' + i, ".pile1", "assets/images/garbage.png")
-        
-        this.addImages(5 - vracYes, '#scale' + i, ".pile2", "assets/images/happy_tupperware.png")
-        
-        this.addImages(5 - noVracYes, '#scale' + i, ".pile3", "assets/images/garbage.png")
+        let delay = 0;
+        this.addImages(vracYes,'#scale' + i, ".pile0", "assets/images/happy_tupperware.png",delay);
+        delay += vracYes;
+        this.addImages(noVracYes,'#scale' + i, ".pile1", "assets/images/garbage.png" ,delay);
+        delay += noVracYes;
+        this.addImages(5 - vracYes,'#scale' + i, ".pile2", "assets/images/happy_tupperware.png" ,delay);
+        delay += 5 - vracYes;
+        this.addImages(5 - noVracYes,'#scale' + i, ".pile3", "assets/images/garbage.png" ,delay);
+        delay += 5 - noVracYes;
         scaleXValue += 300;
       })
 }
   
   
-  rotateScale(degrees: number, scaleName:string, scaleXValue: number) {
-    const fullscale = d3.select(scaleName)
-
-    const plates = fullscale.selectAll(".plate");
-  
-    fullscale.style("transform-origin", "top left")
-         .style("transform", "translate(" + scaleXValue + "px, -71px) rotate("+ degrees +"deg)")
-    
-    plates.style("transform", "rotate("+ -degrees +"deg)");
-  }
-  
-  addImages(number: number, scaleId: string,pileid: string, src: string) {
-    const container = d3.select(scaleId).select(pileid);
-    let marginTop = -20;
-  
-=======
-      d3.select('.allScales').attr('y', 300);
-
-      let delay = 0;
-      this.addImages(vracYes, "pile0", "assets/images/happy_tupperware.png", delay);
-      delay += vracYes;
-      this.addImages(noVracYes, "pile1", "assets/images/garbage.png", delay);
-      delay += noVracYes;
-      this.addImages(5 - vracYes, "pile2", "assets/images/happy_tupperware.png", delay);
-      delay += 5 - vracYes;
-      this.addImages(5 - noVracYes, "pile3", "assets/images/garbage.png", delay);
-      delay += 5 - noVracYes;
-  }
-  
-  
-  rotateScale(id: string, degrees: number, delay: number) {
+  rotateScale(scaleName:string, degrees: number, delay: number, scaleXValue: number) {
+    console.log(degrees)
     setTimeout(()=>{
-      const scale = d3.select("#" + id);
-      const plates = d3.selectAll("#" + id + " .plate");
+      const scale = d3.select(scaleName)
 
+      const plates = scale.selectAll(".plate");
+    
       scale.style("transform-origin", "top left")
-        .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
+          .style("transform", "translate(" + scaleXValue + "px, -71px) rotate("+ degrees +"deg)")
+          //.style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
       
-      plates.each(function() {
-        d3.select(this).style("transform-origin", "top left")
-        .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`)
-      });
+      plates.style("transform-origin", "top left")
+            .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`);
     }, delay);
   }
   
-  addImages(number: number, id: string, src: string, delay: number) {
-    const container = d3.select(`#${id}`);
+  // minh
+  // rotateScale(id: string, degrees: number, delay: number) {
+  //   setTimeout(()=>{
+  //     const scale = d3.select("#" + id);
+  //     const plates = d3.selectAll("#" + id + " .plate");
+
+  //     scale.style("transform-origin", "top left")
+  //       .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
+      
+  //     plates.each(function() {
+  //       d3.select(this).style("transform-origin", "top left")
+  //       .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`)
+  //     });
+  //   }, delay);
+  // }
+  
+  addImages(number: number, scaleId: string, pileid: string, src: string, delay: number) {
+    const container = d3.select(scaleId).select(pileid);
     let start = (delay + number) * 0.6;
->>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
+
+
     container.selectAll("img")
       .data(d3.range(number))
       .enter()
       .append("img")
       .attr("src", src)
-<<<<<<< HEAD
-      .attr("width", 20)
-      .attr("height", 20)
-      .style("margin-top", d => {
-        const currentMarginTop = marginTop;
-        marginTop = -40;
-        return `${currentMarginTop}px`;
-      })
-      .style("display", "block")
-      .style("z-index", 9);
-=======
+      // .attr("width", 20)
+      // .attr("height", 20)
+      // .style("margin-top", d => {
+      //   const currentMarginTop = marginTop;
+      //   marginTop = -40;
+      //   return `${currentMarginTop}px`;
+      // })
+      // .style("display", "block")
       .style('position', "relative")
       .attr("width", 30)
       .attr("height", 30)
@@ -827,7 +713,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('animation-delay', function(d: any) { start -= 0.6; return start + "s"});
   }
 
-  createBalanceAnimation(id: string, data: ScalesDataSetup) {
+  createBalanceAnimation(id: string, data: ScalesDataSetup, scaleXValue: number) {
     const angle_increments = 7 / 5; /*7 looks to be the perfect value*/
 
     const delay_increments = 600; /* in ms */
@@ -842,6 +728,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     const animation = {
       id: id,
       state: 0,
+      scaleX: scaleXValue,
       queue: queue,
     };
     
@@ -860,6 +747,5 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }
 
     return animation;
->>>>>>> 46ae1d69831a1563fc4951cb20b69fc20d996823
   }
 }

@@ -318,8 +318,12 @@ export class ClientWallComponent implements OnInit {
 
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
-    this.vizService.drawScale(vehiculesData[0]);
-    this.animations.push(this.vizService.createBalanceAnimation("scale", vehiculesData[0]));
+    let scaleXValue = -466;
+    this.vizService.drawScale(vehiculesData);
+    for(let i = 0; i < vehiculesData.length; i++){
+      this.animations.push(this.vizService.createBalanceAnimation("#scale" + i, vehiculesData[i], scaleXValue));
+      scaleXValue += 300;
+    }
   }
 
   getScalesData(): ScalesDataSetup[]{
@@ -333,8 +337,8 @@ export class ClientWallComponent implements OnInit {
       const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
       vehiculesData.push({
         vehicule: vehiculeNames[i-1],
-        vracReturnValue: this.preprocessService.getReturnableValue(separatedVehiculeData[0]),
-        nonVracReturnValue: this.preprocessService.getReturnableValue(separatedVehiculeData[1])
+        vracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[0]),
+        nonVracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[1])
       })
     }
     return vehiculesData;
@@ -356,9 +360,9 @@ export class ClientWallComponent implements OnInit {
 
   animate() {
     for (let animation of this.animations) {
-      this.vizService.rotateScale(animation.id, 0, 0);
+      this.vizService.rotateScale(animation.id, 0, 0, animation.scaleX);
       for (let step of animation.queue) {
-        this.vizService.rotateScale(animation.id, step.angle, step.delay);
+        this.vizService.rotateScale(animation.id, step.angle, step.delay, animation.scaleX);
       }
     }
   }
