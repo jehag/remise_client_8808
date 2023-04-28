@@ -389,13 +389,20 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
 
 
 */
-.pie {
-  --p:80;
-  --b:22px;
-  --c:orange;
-  --w:150px;
 
-  width:150px;
+@property --p{
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.pie {
+  --p:20;
+  --b:22px;
+  --c:darkred;
+  --w:150px;
+  
+  width:var(--w);
   aspect-ratio:1;
   position:relative;
   display:inline-grid;
@@ -404,6 +411,7 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
   font-size:25px;
   font-weight:bold;
   font-family:sans-serif;
+  padding: 62.5px 0 0 0;
 }
 .pie:before,
 .pie:after {
@@ -414,17 +422,18 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
 .pie:before {
   inset:0;
   background:
-      radial-gradient(farthest-side,orange 98%,#0000) top/22px 22px no-repeat,
-      conic-gradient(orange calc(80*1%),#0000 0);
-  -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - 22px),#000 calc(100% - 22px));
-  mask:radial-gradient(farthest-side,#0000 calc(99% - 22px),#000 calc(100% - 22px));
+    radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+    conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+  -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+          mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
 }
 .pie:after {
-  inset:calc(50% - 22px/2);
-  background:orange;
-  transform:rotate(0deg) translateY(calc(50% - 150px/2));
-  transform-origin:bottom center;
-  animation: progress 80s linear forwards;
+  inset:calc(50% - var(--b)/2);
+  background:var(--c);
+  transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+}
+.animate {
+  animation:p 1s .5s both;
 }
 .no-round:before {
   background-size:0 0,auto;
@@ -432,14 +441,6 @@ body {width: 100%; height: 100vh; background-color: #262626;} */
 .no-round:after {
   content:none;
 }
-@keyframes progress {
-  from {
-      transform:rotate(0deg) translateY(calc(50% - 150px/2));
-  }
-  to {
-      transform:rotate(288deg) translateY(calc(50% - 150px/2));
-  }
-}
-body {
-  background:#ddd;
+@keyframes p {
+  from{--p:0}
 }
