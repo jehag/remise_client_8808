@@ -314,13 +314,16 @@ export class ClientWallComponent implements OnInit {
 
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
-    this.vizService.drawScale(vehiculesData[0]);
+    this.vizService.drawScale(vehiculesData);
   }
 
   getScalesData(): ScalesDataSetup[]{
     let vehiculesData: ScalesDataSetup[] = [];
     const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
     for(let i = 1; i <= 5; i++){
+      if(i == 2 || i == 5){
+        continue;
+      }
       const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
       const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
       vehiculesData.push({
