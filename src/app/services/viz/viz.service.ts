@@ -748,19 +748,21 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawCircles(data: QuestionData[]){
-    console.log(data)
     d3.select('.donuts')
-    .selectAll('.pie.animate')
+    .selectAll('.donut')
     .data(data)
     .each(function (d: QuestionData, i: number, nodes: any) {
       const value = Math.round(d.value);
-      d3.select(nodes[i])
+      const donut = d3.select(nodes[i]);
+      donut.select('.pie.animate')
         .html(value + '%')
         .style('--p', value)
+        .style('--c', 'orange')
+        .style('--b', '10px')
 
-      // d3.select(nodes[i])
-      //   .append('text')
-      //   .text(d.label)
+      donut.select('.text')
+        .append('text')
+        .text(d.label)
     })
   }
 }
