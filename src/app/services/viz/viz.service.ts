@@ -27,12 +27,6 @@ export class VizService {
       .attr("xmlns", "http://www.w3.org/2000/svg")
   }
 
-  unSetCanvasSize (graphId: string) {
-    d3.select(graphId)
-      .attr('width', 0)
-      .attr('height', 0)
-  }
-
   appendAxes (g: any) {
     g.append('g')
       .attr('class', 'x axis')
@@ -46,19 +40,19 @@ export class VizService {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   appendTupperwareGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'y axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
 
     g.append('text')
       .text("Tranches d'âge")
       .attr('class', 'x axis-text')
-      .attr('font-size', 12)
+      .attr('font-size', 25)
   }
 
   placeTitle (g: any, title: string, width: number) {
@@ -100,12 +94,32 @@ export class VizService {
     }
   }
 
+  placeClientWallTitle (g: any, title: string, width: number, height:number = -20) {
+    g.append('text')
+      .attr('class', 'title')
+      .attr('x', width/2)
+      .attr('y', height)
+      .style('font-size', '40px')
+      .style('font-weight', 'bold')
+      .style('text-anchor', 'middle')
+      .style('margin-bottom', '30px')
+      .text(title)
+  }
+
   positionLabels (g: any, width: number, height: number) {
     g.selectAll('.y.axis-text')
       .attr('transform', 'translate( -50 ,' + height / 2 + '), rotate(-90)')
   
     g.selectAll('.x.axis-text')
       .attr('transform', 'translate(' + width / 2 + ',' + (height + 50) + ')')
+  }
+
+  positionClientWallLabels (g: any, yHeight: number, xWidth : number, xHeight: number) {
+    g.selectAll('.y.axis-text')
+      .attr('transform', 'translate( -50 ,' + yHeight / 2 + '), rotate(-90)')
+  
+    g.selectAll('.x.axis-text')
+      .attr('transform', 'translate(' + xWidth / 2 + ',' + (xHeight + 50) + ')')
   }
 
   drawXAxis (xScale: any, height: number) {
@@ -241,10 +255,26 @@ export class VizService {
           .style('animation-delay', function(d: any) { return ((container_sizes.length - d.index -1) * 0.6) + "s"})
       });
 
+      const images = ["apple.png", "brocolli.png", "chicken.png", "spaghetti.png"]
+
       d3.selectAll('.tup').style('background-color', '#BDE1FF');
       d3.selectAll('.per').style('background-color', 'red');
-      d3.selectAll('.ware').style('background-color', '#F5F5F5').style('border', '3px solid #BDE1FF');
-      
+
+      d3.selectAll('.ware')
+        .style('background-color', '#F5F5F5')
+        .style('border', '3px solid #BDE1FF')
+        .each(function(d: any, i:any, nodes:any) {
+          if (parseInt(d3.select(nodes[i].parentNode).style('height').replace("%", "")) >= 10) {
+            const randomNum = Math.floor(Math.random() * images.length);
+            const imgPath = `assets/images/tup/${images[randomNum]}`;
+            d3.select(this)
+              .style('background-image', `url(${imgPath})`)
+              .style('background-size', '25px 25px')
+              .style('background-repeat', 'no-repeat')
+              .style('background-position', 'center');
+          }
+      });
+
   }
 
   deleteGraph(graphId: string){
@@ -535,13 +565,17 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     .data(data.features)
     .enter()
     .append('path')
+    .attr('transform', 'translate(-60,0)')
     .attr('d', path)
     .each((d: any, i: any) => {
       const centroid = path.centroid(d.geometry)
+      if(provinceAnswers[i].value == 0){
+        return;
+      }
 
       g.append('g')
         .attr('id', 'map-label')
-        .attr('transform', 'translate(' + centroid[0] + ',' + centroid[1] + ')')
+        .attr('transform', 'translate(' + (centroid[0] - 60) + ',' + centroid[1] + ')')
         .append('text')
         .attr('class','name')
         .text(function(){
@@ -558,10 +592,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       const province = provinceAnswers.find((province) => {
         return province.province == d.properties.name;
       })
-      if(province!.answer == "Aucune réponse"){
-        return 0;
+      if(province!.value == 0){
+        return 'white';
       }
-      const R = d3.scaleLinear().domain([30, 60]).range([220, 0]);
+      const R = d3.scaleLinear().domain([30, 60]).range([250, 0]);
       const G = d3.scaleLinear().domain([30, 60]).range([0, 220]);
       return 'rgba('+ (R(province!.value)) +', '+ (G(province!.value)) +', 0,1)';
     })
@@ -573,6 +607,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   drawTupperwareYAxis (yScale: any) {
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
+
+    d3.select('.y.axis').selectAll('.tick').select('text').style('font-size', '20px');
   }
 
   drawTupperwareXAxis (xScale: any, height: number) {
@@ -581,7 +617,75 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .call(d3.axisBottom(xScale).tickSizeOuter(0).tickArguments([5, '.0r']) as any);
     d3.select('.x.axis').selectAll('.tick').select('text').text(function(d: any) {
         return d;
-    })
+    }).style('font-size', '20px');
+  }
+
+  createScale() {
+    // Select the body element
+    // var body = d3.select(".allScales .scales");
+    // console.log(body)
+
+    // // Create the scale container
+    // var scale = body.append("div")
+    //     .attr("class", "scale");
+
+    // // Create the left plate
+    // var leftPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the left dish and piles
+    // var leftDish = leftPlate.append("div")
+    //     .attr("class", "dish");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile0");
+
+    // leftDish.append("div")
+    //     .attr("class", "pile1");
+
+    // // Create the beam image
+    // scale.append("img")
+    //     .attr("class", "beam")
+    //     .attr("src", "assets/images/Accolade.png");
+
+    // // Create the right plate
+    // var rightPlate = scale.append("div")
+    //     .attr("class", "plate");
+
+    // // Create the right dish and piles
+    // var rightDish = rightPlate.append("div")
+    //     .attr("class", "dish");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile2");
+
+    // rightDish.append("div")
+    //     .attr("class", "pile3");
+
+    // // Create the bar container
+    // var bar = body.append("div")
+    //     .attr("class", "bar");
+
+    // // Create the stand and stander elements
+    // bar.append("div")
+    //     .attr("class", "stand");
+
+    // bar.append("div")
+    //     .attr("class", "stander");
+
+    // // Create the image container
+    // var imageContainer = body.append("div")
+    //     .style("position", "absolute")
+    //     .style("top", "150px")
+    //     .style("left", "50%")
+    //     .style("transform", "translateX(-50%)");
+
+    // // Create the image element
+    // imageContainer.append("img")
+    //     .attr("src", "assets/images/velo.png")
+    //     .style("width", "200px")
+    //     .style("height", "50px");
+
   }
 
   drawScale(data: ScalesDataSetup) {

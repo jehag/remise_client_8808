@@ -13,7 +13,7 @@ import { ScalesDataSetup } from '../interfaces/scales-data-setup';
 
 enum GraphType {
   Map = 0,
-  CitySize = 1,
+  Jars = 1,
   Pyramid = 2,
   Tupperware = 3,
   Scales = 4,
@@ -98,9 +98,9 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Pyramid;
         break;
       case GraphType.Pyramid:
-        this.graphType = GraphType.CitySize;
+        this.graphType = GraphType.Jars;
         break;
-      case GraphType.CitySize:
+      case GraphType.Jars:
         this.graphType = GraphType.Tupperware;
         break;
       case GraphType.Tupperware:
@@ -124,11 +124,11 @@ export class ClientWallComponent implements OnInit {
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
         break;
-      case GraphType.CitySize:
+      case GraphType.Jars:
         this.graphType = GraphType.Pyramid;
         break;
       case GraphType.Tupperware:
-        this.graphType = GraphType.CitySize;
+        this.graphType = GraphType.Jars;
         break;
       case GraphType.Scales:
         this.graphType = GraphType.Tupperware
@@ -142,8 +142,8 @@ export class ClientWallComponent implements OnInit {
 
   createGraphs() {
     this.createMapGraph();
-    this.graphType = GraphType.CitySize;
-    this.createCitySizeGraph();
+    this.graphType = GraphType.Jars;
+    this.createJarsGraph();
     this.graphType = GraphType.Pyramid;
     this.createPyramidGraph();
     this.graphType = GraphType.Tupperware;
@@ -160,11 +160,11 @@ export class ClientWallComponent implements OnInit {
     const provinceAnswers: MapDataSetup[] = this.getMapData();
     this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#client-wall-chart');
     var projection = this.vizService.getProjection(this.mapData, this.svgSize.width, this.svgSize.height);
-    var path = this.vizService.getPath(projection);
+    var path = this.vizService.getPath(projection);    
     const g = this.vizService.generateG(this.margin, '.client-wall-graph');
     const color: string = "#FF4136";
     this.vizService.clientMapBackground(g, this.mapData, path, color, provinceAnswers);
-    this.vizService.placeTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
+    this.vizService.placeClientWallTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
   }
 
   getQuestionData(symbol: string, maxNumber: number) : QuestionDataHelper[] {
@@ -228,7 +228,7 @@ export class ClientWallComponent implements OnInit {
     return mapData;
   }
 
-  createCitySizeGraph() {
+  createJarsGraph() {
     const cityData: QuestionData[] = this.getCitySizeData();
     this.vizService.drawJars(cityData, 'Qui achète le plus en vrac?');
   }
@@ -266,7 +266,7 @@ export class ClientWallComponent implements OnInit {
     const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9"];
     //const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9", "#B10DC9", "#FF007F", "#A0522D", "#AAAAAA", "#39CCCC"];
     const colorScale = this.scalesService.setColorScale(choices, colors);
-    this.vizService.placeTitle(d3.select(".pyramid-container"), 'Les "excuses" pour ne pas faire du vrac', 1000)
+    this.vizService.placeClientWallTitle(d3.select(".pyramid-container"), 'Les "excuses" pour ne pas faire du vrac', 1000)
     this.vizService.drawPyramid(choices, colorScale);
   }
 
@@ -282,7 +282,19 @@ export class ClientWallComponent implements OnInit {
     const labels = ["18-24", "25-39", "40-54", "55-64", "65 et plus"];
     const tupperwareData: QuestionData[] = this.getTupperwareData(labels);
 
-    this.buildGraph(labels, tupperwareData);
+    this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#tupperware-chart');
+
+    const g = this.vizService.generateG(this.margin, '.tupperware-graph');
+    this.vizService.appendAxes(g);
+    this.vizService.appendTupperwareGraphLabels(g);
+    this.vizService.placeClientWallTitle(g, 'Combien de personnes font leur épicerie en vrac?', this.graphSize.width, -40);
+    this.vizService.positionClientWallLabels(g, this.graphSize.height + 180, this.graphSize.width - 160, this.graphSize.height + 10);
+
+    const xScale = this.scalesService.setTupperwareXScale(this.graphSize.width, labels);
+    const yScale = this.scalesService.setTupperwareYScale(this.graphSize.height);
+    this.vizService.drawTupperwareXAxis(xScale, this.graphSize.height);
+    this.vizService.drawTupperwareYAxis(yScale);
+    this.vizService.drawTupperwareBars(g, tupperwareData, xScale, yScale);
   }
 
   getTupperwareData(labels: string[]): QuestionData[] {
@@ -302,22 +314,6 @@ export class ClientWallComponent implements OnInit {
       })
     }
     return data;
-  }
-
-  buildGraph(labels: string[], dataset: any){
-    this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#tupperware-chart');
-
-    const g = this.vizService.generateG(this.margin, '.tupperware-graph');
-    this.vizService.appendAxes(g);
-    this.vizService.appendTupperwareGraphLabels(g);
-    this.vizService.placeTitle(g, this.questionsList[this.graphType].question, this.graphSize.width);
-    this.vizService.positionLabels(g, this.graphSize.width, this.graphSize.height);
-
-    const xScale = this.scalesService.setTupperwareXScale(this.graphSize.width, labels);
-    const yScale = this.scalesService.setTupperwareYScale(this.graphSize.height);
-    this.vizService.drawTupperwareXAxis(xScale, this.graphSize.height);
-    this.vizService.drawTupperwareYAxis(yScale);
-    this.vizService.drawTupperwareBars(g, dataset, xScale, yScale);
   }
 
   createScalesGraph(){
