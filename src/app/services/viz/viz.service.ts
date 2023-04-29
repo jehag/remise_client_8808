@@ -276,7 +276,7 @@ export class VizService {
         .style('background-color', '#F5F5F5')
         .style('border', '3px solid #BDE1FF')
         .each(function(d: any, i:any, nodes:any) {
-          if (parseInt(d3.select(nodes[i].parentNode).style('height').replace("%", "")) >= 10) {
+          if (parseInt(d3.select(nodes[i].parentNode).style('height').replace("%", "")) >= 5) {
             const randomNum = Math.floor(Math.random() * images.length);
             const imgPath = `assets/images/tup/${images[randomNum]}`;
             d3.select(this)
@@ -640,6 +640,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
 
   drawScale(data: ScalesDataSetup[]) {
+    console.log(data)
     d3.select('.allScales').attr('y', 300);
     let scaleXValue = -466;
     d3.selectAll('.scales')

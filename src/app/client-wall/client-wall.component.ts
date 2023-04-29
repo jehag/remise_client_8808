@@ -347,7 +347,7 @@ export class ClientWallComponent implements OnInit {
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
     const graph: any = d3.select('.donuts-graph');
-    this.vizService.placeDonutsTitle(graph, "Les produits les plus simples à acheter sans emballage", this.graphSize.width, this.graphSize.height)
+    this.vizService.placeDonutsTitle(graph, "Les produits les plus simples à acheter sans emballage selon les Canadiens", this.graphSize.width, this.graphSize.height)
     this.vizService.drawCircles(circlesData);
   }
 
