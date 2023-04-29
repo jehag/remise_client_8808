@@ -765,6 +765,26 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawCircles(data: QuestionData[]){
+
+    const width = 150
+    const borderWidth = 10
+
+    const svg = d3.create('svg')
+    .attr('viewBox', `0 0 ${width} ${width}`)
+    
+    svg.append('circle')
+      .attr('cx', width/2)
+      .attr('cy', width/2)
+      .attr('r', width/2 - borderWidth/2)
+      .style('stroke', 'gray')
+      .style('stroke-width', borderWidth)
+      .style('fill', 'none');
+
+    // convert the SVG circle to a data URI
+    const svgNode = svg.node();
+    const svgString = svgNode ? new XMLSerializer().serializeToString(svgNode) : '';
+    const dataUri = "data:image/svg+xml;base64," + btoa(svgString);
+
     d3.select('.donuts')
     .selectAll('.donut')
     .data(data)
@@ -776,6 +796,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         .style('--p', value)
         .style('--c', 'orange')
         .style('--b', '10px')
+        .style('background-image', `url(${dataUri})`)
 
       donut.select('.text')
         .append('text')
