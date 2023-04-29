@@ -642,7 +642,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   drawScale(data: ScalesDataSetup[]) {
     console.log(data)
     d3.select('.allScales').attr('y', 300);
-    let scaleXValue = -466;
     d3.selectAll('.scales')
       .data(data)
       .each((d: ScalesDataSetup, i:any) => {
@@ -660,11 +659,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         delay += 5 - vracYes;
         this.addImages(5 - noVracYes,'#scale' + i, ".pile3", "assets/images/garbage.png" ,delay);
         delay += 5 - noVracYes;
-        scaleXValue += 300;
       })
 }
 
-  rotateScale(scaleName:string, degrees: number, delay: number, scaleXValue: number) {
+  rotateScale(scaleName:string, degrees: number, delay: number) {
     setTimeout(()=>{
       const scale = d3.select(scaleName)
 
@@ -695,7 +693,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('animation-delay', function(d: any) { start -= 0.6; return start + "s"});
   }
 
-  createBalanceAnimation(id: string, data: ScalesDataSetup, scaleXValue: number) {
+  createBalanceAnimation(id: string, data: ScalesDataSetup) {
     const angle_increments = 7 / 5; /*7 looks to be the perfect value*/
 
     const delay_increments = 600; /* in ms */
@@ -710,7 +708,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     const animation = {
       id: id,
       state: 0,
-      scaleX: scaleXValue,
       queue: queue,
     };
     
@@ -773,58 +770,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         .style('text-align', 'center')
         .style('margin', 'auto')
         .style('justify-content', 'center')
-        .style('width', '150px')
-        // .text(function (d: QuestionData) {
-        //   const maxLineLength = 30;
-        //   if(d.label.length < maxLineLength){
-        //     return d.label;
-        //   }
-        //   let words: string[] = d.label.split(' ');
-        //   for(let i = 0; i < words.length;i++){
-        //     if(words[i] == ''){
-        //       words.splice(i,1);
-        //     }
-        //   }
-        //   let labelStart: string = '';
-        //   let currentWordIndex: number = 0;
-        //   while((labelStart.length + words[currentWordIndex].length) < maxLineLength){
-        //     labelStart += ' ' + words[currentWordIndex];
-        //     currentWordIndex++;
-        //   }
-          
-        //   let substringOffset: number = 80;
-        //   while(currentWordIndex <= words.length - 1){
-        //     let line: string = words[currentWordIndex];
-        //     currentWordIndex++;
-        //     while(words[currentWordIndex] && (line.length + words[currentWordIndex].length) < currentWidth){
-        //       line = line + ' ' + words[currentWordIndex];
-        //       currentWordIndex++;
-        //     }
-            
-        //     if(words[currentWordIndex] && (words[currentWordIndex].match(/[.,:!?]/))){
-        //       line += words[currentWordIndex];
-        //       currentWordIndex++;
-        //     }
-        //     d3.select(nodes[i].parentNode)
-        //       .append("span")
-        //       .text(function() {
-        //         return line;
-        //       })
-        //       .style("color", "#000")
-        //       .style("font-size", "18px")
-        //       .style("position", "absolute")
-        //       .style("left", "0")
-        //       .style("right", "0")
-        //       .style("transform", "translateY(-" + (175 - substringOffset + stringOffset) + "%)")
-        //       .attr('dy', '0.64em')
-  
-        //     d3.select(nodes[i])
-        //       .style("transform", "translateY(-" + (175 + stringOffset) + "%)")
-        //     stringOffset += 40;
-        //     substringOffset += 80;
-        //   }
-        //   return labelStart;
-        //})
+        .style('width', '150px');
     })
   }
 }

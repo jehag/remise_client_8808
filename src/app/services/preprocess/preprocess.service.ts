@@ -660,7 +660,7 @@ export class PreprocessService {
   getVehiculeRows(vehiculeNumber: number): any[] {
     let rows: any[] = [];
     this.excelData.forEach((row) => {
-      if(row['Q3r' + vehiculeNumber] == 1){
+      if(row['SCOL'] == vehiculeNumber){
         rows.push(row)
       }
     })
@@ -684,9 +684,9 @@ export class PreprocessService {
     let crisers: number = 0;
     let nonCrisers: number = 0;
     totalRows.forEach((row) => {
-      if(row['Q18r1'] && (row['Q18r1'] == 4 || row['Q18r1'] == 5)){
+      if((row['Q3r1'] && row['Q3r1'] == 1)){
         crisers++;
-      } else if(row['Q18r1'] && (row['Q18r1'] == 1 || row['Q18r1'] == 2)){
+      } else if((row['Q3r2'] && row['Q3r2'] == 1) || (row['Q3r3'] && row['Q3r3'] == 1) || (row['Q3r4'] && row['Q3r4'] == 1)){
         nonCrisers++;
       }
     })
