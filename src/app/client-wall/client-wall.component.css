@@ -422,6 +422,14 @@ body {width: 100%; height: 100vh;}
   text-align: center;
 }
 
+.circle {
+  width: 150px; /* diameter of 150px */
+  height: 150px;
+  background: radial-gradient(circle at center, #ccc 70%, transparent 70%) no-repeat; /* gray circle */
+  border: 10px solid #ccc; /* 10px gray border */
+  border-radius: 75px; /* radius of 75px */
+}
+
 .pie {
   --p:20;
   --b:22px;
