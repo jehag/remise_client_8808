@@ -40,7 +40,7 @@ export class VizService {
     g.append('text')
       .text('Pourcentage (%)')
       .attr('class', 'x axis-text')
-      .attr('font-size', 25)
+      .attr('font-size', 15)
   }
 
   appendTupperwareGraphLabels (g: any) {
@@ -103,6 +103,18 @@ export class VizService {
       .style('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('margin-bottom', '30px')
+      .text(title)
+  }
+
+  placeDonutsTitle (g: any, title: string, width: number, height:number = -20) {
+    g.insert("text",":first-child")
+      .attr('class', 'title')
+      .attr('x', width/2)
+      .attr('y', height)
+      .style('font-size', '40px')
+      .style('font-weight', 'bold')
+      .style('text-anchor', 'middle')
+      .style('margin', '30px')
       .text(title)
   }
 
@@ -476,6 +488,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         const letterSize: number = 7;
         const currentWidth: number = parseInt(nodes[i].parentNode.style.width.split('p')[0]);
         if(d.length * letterSize < currentWidth){
+          d3.select(nodes[i])
+            .style("transform", "translateY(-175%)")
           return d;
         }
         let words: string[] = d.split(' ');
@@ -491,7 +505,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
           currentWordIndex++;
         }
         
-        let substringOffset: number = 70;
+        let substringOffset: number = 80;
+        let stringOffset = 40;
         while(currentWordIndex <= words.length - 1){
           let line: string = words[currentWordIndex];
           currentWordIndex++;
@@ -514,9 +529,13 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
             .style("position", "absolute")
             .style("left", "0")
             .style("right", "0")
-            .style("transform", "translateY(-" + (175 - substringOffset) + "%)")
+            .style("transform", "translateY(-" + (175 - substringOffset + stringOffset) + "%)")
             .attr('dy', '0.64em')
-          substringOffset += 70;
+
+          d3.select(nodes[i])
+            .style("transform", "translateY(-" + (175 + stringOffset) + "%)")
+          stringOffset += 40;
+          substringOffset += 80;
         }
         return labelStart;
 
@@ -526,7 +545,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style("position", "absolute")
       .style("left", "0")
       .style("right", "0")
-      .style("transform", "translateY(-175%)");
   
     pyramid.append("div")
       .style('width', '0')
@@ -652,8 +670,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         scaleXValue += 300;
       })
 }
-  
-  
+
   rotateScale(scaleName:string, degrees: number, delay: number, scaleXValue: number) {
     setTimeout(()=>{
       const scale = d3.select(scaleName)
@@ -763,6 +780,63 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       donut.select('.text')
         .append('text')
         .text(d.label)
+        .style('flex-wrap', 'wrap')
+        .style('display', 'flex')
+        .style('text-align', 'center')
+        .style('margin', 'auto')
+        .style('justify-content', 'center')
+        .style('width', '150px')
+        // .text(function (d: QuestionData) {
+        //   const maxLineLength = 30;
+        //   if(d.label.length < maxLineLength){
+        //     return d.label;
+        //   }
+        //   let words: string[] = d.label.split(' ');
+        //   for(let i = 0; i < words.length;i++){
+        //     if(words[i] == ''){
+        //       words.splice(i,1);
+        //     }
+        //   }
+        //   let labelStart: string = '';
+        //   let currentWordIndex: number = 0;
+        //   while((labelStart.length + words[currentWordIndex].length) < maxLineLength){
+        //     labelStart += ' ' + words[currentWordIndex];
+        //     currentWordIndex++;
+        //   }
+          
+        //   let substringOffset: number = 80;
+        //   while(currentWordIndex <= words.length - 1){
+        //     let line: string = words[currentWordIndex];
+        //     currentWordIndex++;
+        //     while(words[currentWordIndex] && (line.length + words[currentWordIndex].length) < currentWidth){
+        //       line = line + ' ' + words[currentWordIndex];
+        //       currentWordIndex++;
+        //     }
+            
+        //     if(words[currentWordIndex] && (words[currentWordIndex].match(/[.,:!?]/))){
+        //       line += words[currentWordIndex];
+        //       currentWordIndex++;
+        //     }
+        //     d3.select(nodes[i].parentNode)
+        //       .append("span")
+        //       .text(function() {
+        //         return line;
+        //       })
+        //       .style("color", "#000")
+        //       .style("font-size", "18px")
+        //       .style("position", "absolute")
+        //       .style("left", "0")
+        //       .style("right", "0")
+        //       .style("transform", "translateY(-" + (175 - substringOffset + stringOffset) + "%)")
+        //       .attr('dy', '0.64em')
+  
+        //     d3.select(nodes[i])
+        //       .style("transform", "translateY(-" + (175 + stringOffset) + "%)")
+        //     stringOffset += 40;
+        //     substringOffset += 80;
+        //   }
+        //   return labelStart;
+        //})
     })
   }
 }

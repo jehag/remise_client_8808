@@ -229,11 +229,11 @@ export class ClientWallComponent implements OnInit {
   }
 
   createJarsGraph() {
-    const cityData: QuestionData[] = this.getCitySizeData();
+    const cityData: QuestionData[] = this.getJarsData();
     this.vizService.drawJars(cityData, 'Qui achète le plus en vrac?');
   }
 
-  getCitySizeData() {
+  getJarsData() {
     this.checkBoxChoices.myCitySize = true;
     let questionDataList: QuestionDataHelper[] = this.getQuestionData('COL', 4);
     this.checkBoxChoices.myCitySize = false;
@@ -346,6 +346,8 @@ export class ClientWallComponent implements OnInit {
 
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
+    const graph: any = d3.select('.donuts-graph');
+    this.vizService.placeDonutsTitle(graph, "Les produits les plus simples à acheter sans emballage", this.graphSize.width, this.graphSize.height)
     this.vizService.drawCircles(circlesData);
   }
 
