@@ -627,14 +627,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     d3.selectAll('.scales')
       .data(data)
       .each((d: ScalesDataSetup, i:any) => {
-
-        const yes = d.vracReturnValue + d.nonVracReturnValue;
-        const no = 2 - yes;
-        
-        const deg = 7 * (no - yes) /*7 looks to be the perfect value*/
-      /* Faut rajouter sur le scale un pouce vers le haut à droite et un vers le bas à gauche
-        ou un oui/non */
-        
         const numberOfElements = 5
         
         const vracYes = Math.round(d.vracReturnValue * numberOfElements)
@@ -661,7 +653,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       const plates = scale.selectAll(".plate");
     
       scale.style("transform-origin", "top left")
-          //.style("transform", "translate(" + scaleXValue + "px, -71px) rotate("+ degrees +"deg)")
           .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
       
       plates.style("transform-origin", "top left")
@@ -669,40 +660,15 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }, delay);
   }
   
-  // minh
-  // rotateScale(id: string, degrees: number, delay: number) {
-  //   setTimeout(()=>{
-  //     const scale = d3.select("#" + id);
-  //     const plates = d3.selectAll("#" + id + " .plate");
-
-  //     scale.style("transform-origin", "top left")
-  //       .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
-      
-  //     plates.each(function() {
-  //       d3.select(this).style("transform-origin", "top left")
-  //       .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`)
-  //     });
-  //   }, delay);
-  // }
-  
   addImages(number: number, scaleId: string, pileid: string, src: string, delay: number) {
     const container = d3.select(scaleId).select(pileid);
     let start = (delay + number) * 0.6;
-
 
     container.selectAll("img")
       .data(d3.range(number))
       .enter()
       .append("img")
       .attr("src", src)
-      // .attr("width", 20)
-      // .attr("height", 20)
-      // .style("margin-top", d => {
-      //   const currentMarginTop = marginTop;
-      //   marginTop = -40;
-      //   return `${currentMarginTop}px`;
-      // })
-      // .style("display", "block")
       .style('position', "relative")
       .attr("width", 30)
       .attr("height", 30)
