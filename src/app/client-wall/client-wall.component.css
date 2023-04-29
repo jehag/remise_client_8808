@@ -281,6 +281,7 @@ body {width: 100%; height: 100vh;}
 }
 
 .scales {
+  position:relative;
   flex-direction: column; 
   display:flex; 
   width: 300px;
@@ -325,28 +326,28 @@ body {width: 100%; height: 100vh;}
   justify-content: space-around;
 }
 
-.pile0 {
-  order: 1;
+.pile {
+  display: flex;
+  flex-direction: column;
   height: 400px;
   transform: translateY(-100%);
+  justify-content: end;
+}
+
+.pile0 {
+  order: 1;
 }
 
 .pile1 {
   order: 3;
-  height: 400px;
-  transform: translateY(-100%);
 }
 
 .pile2 {
   order: 1;
-  height: 400px;
-  transform: translateY(-100%);
 }
 
 .pile3 {
   order: 3;
-  height: 400px;
-  transform: translateY(-100%);
 }
 
 .beam {
