@@ -661,8 +661,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       const plates = scale.selectAll(".plate");
     
       scale.style("transform-origin", "top left")
-          .style("transform", "translate(" + scaleXValue + "px, -71px) rotate("+ degrees +"deg)")
-          //.style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
+          //.style("transform", "translate(" + scaleXValue + "px, -71px) rotate("+ degrees +"deg)")
+          .style("transform", `rotate(${degrees}deg) translate(-50%, -50%)`)
       
       plates.style("transform-origin", "top left")
             .style("transform", `rotate(${-degrees}deg) translate(-50%, -50%)`);
