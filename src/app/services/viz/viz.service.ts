@@ -747,7 +747,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
     const delay_increments = 600; /* in ms */
     
-    const numberOfElements = 5
+    const numberOfElements = 5;
     
     const vracYes = Math.round(data.vracReturnValue * numberOfElements)
     const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
