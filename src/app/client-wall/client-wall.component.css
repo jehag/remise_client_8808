@@ -154,6 +154,7 @@ body {width: 100%; height: 100vh;}
   font-weight: bold;
   text-decoration: none;
   user-select: none;
+  z-index: 1;
 }
 
 .circle-link:hover {
@@ -493,6 +494,9 @@ body {width: 100%; height: 100vh;}
 
 */
 
+.images-graph {
+  flex-direction: column;
+}
 .image-stack {
   position: relative;
 }

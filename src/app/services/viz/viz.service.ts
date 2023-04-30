@@ -640,7 +640,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
 
   drawScale(data: ScalesDataSetup[]) {
-    d3.select('.allScales').attr('y', 300);
+    d3.select('.allScales')
+      .attr('y', 300)
+
+    this.drawScaleLegend();
     d3.selectAll('.scales')
       .data(data)
       .each((d: ScalesDataSetup, i:any) => {
@@ -659,7 +662,54 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         this.addImages(5 - noVracYes,'#scale' + i, ".pile3", "assets/images/garbage.png" ,delay);
         delay += 5 - noVracYes;
       })
-}
+  }
+
+  drawScaleLegend() {
+    const legendItemsNames: string[] = ['Fait du vrac', 'Ne fait pas de vrac'];
+    d3.select('.allScales')
+      .append('div')
+      .attr('class', 'legend')
+      .style('position','absolute')
+      .style('right', 0)
+      .style('top', 0)
+      .style('transform', 'translate(150%, -150%)')
+      .style('display','flex')
+      .style('flex-direction','column')
+      .append('text')
+      .text('Légende')
+      .style('font-size', '25px')
+      .style('font-weight', 'bold')
+
+    d3.select('.legend')
+      .append('div')
+      .attr('class', 'legendItem')
+      .style('display', 'flex')
+      .style('flex-direction', 'row')
+      .append('img')
+      .attr('src', "assets/images/happy_tupperware.png")
+      .attr("width", 30)
+      .attr("height", 30)
+      .style('margin', '10px')
+    
+    d3.select('.legend')
+      .append('div')
+      .attr('class', 'legendItem')
+      .style('display', 'flex')
+      .style('flex-direction', 'row')
+      .append('img')
+      .attr('src', "assets/images/garbage.png")
+      .attr("width", 30)
+      .attr("height", 30)
+      .style('margin', '10px')
+
+    d3.selectAll('.legendItem')
+      .append('text')
+      .text(function(d, i) {
+        return legendItemsNames[i];
+      })
+      .style('font-size', '20px')
+      .style('margin', '10px')
+  }
 
   rotateScale(scaleName:string, degrees: number, delay: number) {
     setTimeout(()=>{
@@ -743,7 +793,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('stroke-width', borderWidth)
       .style('fill', 'none');
 
-    // convert the SVG circle to a data URI
     const svgNode = svg.node();
     const svgString = svgNode ? new XMLSerializer().serializeToString(svgNode) : '';
     const dataUri = "data:image/svg+xml;base64," + btoa(svgString);
@@ -774,34 +823,45 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawImagesGraph(data: QuestionData[]) {
-    const imageNames: string[] = ['']
     const g = d3.select('.images-graph');
-    console.log(g)
 
-    g.selectAll(".image-stack")
+    g.append('div')
+      .attr('class', 'images')
+      .style('display', 'flex')
+      .style('flex-direction', 'row')
+      .selectAll(".image-stack")
       .data(data)
       .enter()
       .append("div")
       .attr("class", "image-stack")
+      .style('display', 'flex')
+      .style('flex-direction', 'column')
+      .style('margin-right', '10px')
       .style("position", "relative")
       .append("img")
       .attr('src', function(d){ return d.label})
       .style('max-width', '300px')
       .attr('class', 'bottom-image')
+      .style("position", "relative")
       .style('filter', 'grayscale(100%)')
-      .style('position', 'absolute')
-      .style('top', 0)
+      .style('opacity', 0.2)
 
     
     g.selectAll(".image-stack")
       .data(data)
       .append('img')
       .attr('src', function(d){ return d.label})
+      .attr('class', 'top-image')
       .style('opacity', 1)
       .style('clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
       .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})  
       .style('max-width', '300px')
       .style('position', 'absolute')
-      .style('top', 0)
+      .attr('top', '0')
+      .style('left', '0')
+
+
+    g.select('.title')
+      .style('margin', '40px')
   }
 }

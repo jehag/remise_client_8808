@@ -405,6 +405,9 @@ export class ClientWallComponent implements OnInit {
       const questionDataHelper: QuestionDataHelper = this.preprocessService.getQuestionData(choice, user, this.checkBoxChoices);
       circlesData.push({label: choice.split(' - ')[0], value: (questionDataHelper.questionData[3].value + questionDataHelper.questionData[4].value)})
     }
+    circlesData.sort((a, b) => {
+      return b.value - a.value;
+    })
     return circlesData;
   }
 
@@ -419,16 +422,14 @@ export class ClientWallComponent implements OnInit {
 
   createImagesGraph() {
     const imagesData: QuestionData[] = this.getImagesData();
+    this.vizService.placeClientWallTitle(d3.select('.images-graph'), 'Combien de gens font du vrac en fonction de leur mode de transport?', this.graphSize.width)
     this.vizService.drawImagesGraph(imagesData);
   }
 
   getImagesData(): QuestionData[] {
-    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg', 'assets/images/home_delivery.png']
+    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg', 'assets/images/home_delivery.jpg']
     let imagesData: QuestionData[] = [];
     for(let i = 1; i <= 5; i++){
-      if(i == 2 || i == 5){
-        continue
-      }
       const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
       const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
       imagesData.push({label: imagesSrc[i-1], value: (separatedVehiculeData[0].length/vehiculeData.length)})
