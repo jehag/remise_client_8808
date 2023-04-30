@@ -683,17 +683,17 @@ export class PreprocessService {
     return [vracRows, nonVracRows];
   }
 
-  getCriseValue(totalRows: any[]) {
-    let crisers: number = 0;
-    let nonCrisers: number = 0;
+  getInfiniteResourcesValue(totalRows: any[]) {
+    let infinites: number = 0;
+    let noninfinites: number = 0;
     totalRows.forEach((row) => {
-      if((row['Q3r1'] && row['Q3r1'] == 1)){
-        crisers++;
-      } else if((row['Q3r2'] && row['Q3r2'] == 1) || (row['Q3r3'] && row['Q3r3'] == 1) || (row['Q3r4'] && row['Q3r4'] == 1)){
-        nonCrisers++;
+      if(row['Q18r2'] == 4 || row['Q18r2'] == 5){
+        infinites++;
+      } else if (row['Q18r2'] == 1 || row['Q18r2'] == 2){
+        noninfinites++;
       }
     })
-    return (crisers/(crisers + nonCrisers));
+    return (infinites/(infinites + noninfinites));
   }
   
 }

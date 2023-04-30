@@ -327,74 +327,35 @@ export class ClientWallComponent implements OnInit {
 
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
-    let scaleXValue = -466;
     this.vizService.drawScale(vehiculesData);
     for(let i = 0; i < vehiculesData.length; i++){
       this.animations.push(this.vizService.createBalanceAnimation("#scale" + i, vehiculesData[i]));
-      scaleXValue += 300;
     }
   }
 
   getScalesData(): ScalesDataSetup[]{
-    let scolarityData: ScalesDataSetup[] = [];
-    const scolarityNames: string[] = ['Secondaire et primaire', 'Étude collégiales', 'Études universitaires'];
-    let secData: any[] = [];
-    secData.push(this.preprocessService.getVehiculeRows(1));
-    secData.push(this.preprocessService.getVehiculeRows(2));
-    const mergedSecData = [...secData[0], ...secData[1]];
-    const separatedSecData: any[] = this.preprocessService.getVracRows(mergedSecData);
-
-    let colData: any[] = [];
-    colData.push(this.preprocessService.getVehiculeRows(3));
-    colData.push(this.preprocessService.getVehiculeRows(4));
-    const mergedColData = [...colData[0], ...colData[1]];
-    const separatedColData: any[] = this.preprocessService.getVracRows(mergedColData);
-
-    let uniData: any[] = [];
-    uniData.push(this.preprocessService.getVehiculeRows(5));
-    uniData.push(this.preprocessService.getVehiculeRows(6));
-    const mergedUniData = [...uniData[0], ...uniData[1]];
-    const separatedUniData: any[] = this.preprocessService.getVracRows(mergedUniData);
-
-    scolarityData.push({
-      vehicule: scolarityNames[0],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedSecData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedSecData[1])
-    })
-
-    scolarityData.push({
-      vehicule: scolarityNames[1],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedColData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedColData[1])
-    })
-
-    scolarityData.push({
-      vehicule: scolarityNames[2],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedUniData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedUniData[1])
-    })
-
-    // let vehiculesData: ScalesDataSetup[] = [];
-    // const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
-    // for(let i = 1; i <= 5; i++){
-    //   if(i == 2 || i == 5){
-    //     continue;
-    //   }
-    //   const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
-    //   const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
-    //   vehiculesData.push({
-    //     vehicule: vehiculeNames[i-1],
-    //     vracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[0]),
-    //     nonVracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[1])
-    //   })
-    // }
-    return scolarityData;
+    let vehiculesData: ScalesDataSetup[] = [];
+    const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
+    for(let i = 1; i <= 5; i++){
+      if(i == 2 || i == 5){
+        continue;
+      }
+      const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
+      const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
+      vehiculesData.push({
+        vehicule: vehiculeNames[i-1],
+        vracInfiniteValue: this.preprocessService.getInfiniteResourcesValue(separatedVehiculeData[0]),
+        nonVracInfiniteValue: this.preprocessService.getInfiniteResourcesValue(separatedVehiculeData[1])
+      })
+    }
+    console.log(vehiculesData)
+    return vehiculesData;
   }
 
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
     const graph: any = d3.select('.donuts-graph');
-    this.vizService.placeDonutsTitle(graph, "Les produits les plus simples à acheter sans emballage selon les Canadiens", this.graphSize.width, this.graphSize.height)
+    this.vizService.placeDonutsTitle(graph, "Quel pourcentage des Canadiens trouvent que ces produits sont facilement achetable en vrac?", this.graphSize.width, this.graphSize.height)
     this.vizService.drawCircles(circlesData);
   }
 

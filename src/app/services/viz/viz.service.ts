@@ -647,20 +647,20 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     d3.selectAll('.scales')
       .data(data)
       .each((d: ScalesDataSetup, i:any) => {
-        const numberOfElements = 5
+        const numberOfElements = 5;
         
-        const vracYes = Math.round(d.vracReturnValue * numberOfElements)
-        const noVracYes = Math.round(d.nonVracReturnValue * numberOfElements)
+        const vracYes = Math.round(d.vracInfiniteValue * numberOfElements)
+        const noVracYes = Math.round(d.nonVracInfiniteValue * numberOfElements)
         
         let delay = 0;
         this.addImages(vracYes,'#scale' + i, ".pile0", "assets/images/happy_tupperware.png",delay);
         delay += vracYes;
         this.addImages(noVracYes,'#scale' + i, ".pile1", "assets/images/garbage.png" ,delay);
         delay += noVracYes;
-        this.addImages(5 - vracYes,'#scale' + i, ".pile2", "assets/images/happy_tupperware.png" ,delay);
-        delay += 5 - vracYes;
-        this.addImages(5 - noVracYes,'#scale' + i, ".pile3", "assets/images/garbage.png" ,delay);
-        delay += 5 - noVracYes;
+        this.addImages(numberOfElements - vracYes,'#scale' + i, ".pile2", "assets/images/happy_tupperware.png" ,delay);
+        delay += numberOfElements - vracYes;
+        this.addImages(numberOfElements - noVracYes,'#scale' + i, ".pile3", "assets/images/garbage.png" ,delay);
+        delay += numberOfElements - noVracYes;
       })
   }
 
@@ -679,6 +679,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .text('Légende')
       .style('font-size', '25px')
       .style('font-weight', 'bold')
+      .style('margin-bottom', '10px')
 
     d3.select('.legend')
       .append('div')
@@ -689,7 +690,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr('src', "assets/images/happy_tupperware.png")
       .attr("width", 30)
       .attr("height", 30)
-      .style('margin', '10px')
+      .style('margin', '0 5px 5px 0')
     
     d3.select('.legend')
       .append('div')
@@ -700,7 +701,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr('src', "assets/images/garbage.png")
       .attr("width", 30)
       .attr("height", 30)
-      .style('margin', '10px')
+      .style('margin', '0 5px 5px 0')
 
     d3.selectAll('.legendItem')
       .append('text')
@@ -708,7 +709,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         return legendItemsNames[i];
       })
       .style('font-size', '20px')
-      .style('margin', '10px')
+      .style('margin-top', '5px')
   }
 
   rotateScale(scaleName:string, degrees: number, delay: number) {
@@ -743,14 +744,15 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   createBalanceAnimation(id: string, data: ScalesDataSetup) {
-    const angle_increments = 7 / 5; /*7 looks to be the perfect value*/
+    const numberOfElements = 5;
+
+    const angle_increments = 7 / numberOfElements; /*7 looks to be the perfect value*/
 
     const delay_increments = 600; /* in ms */
     
-    const numberOfElements = 5
     
-    const vracYes = Math.round(data.vracReturnValue * numberOfElements)
-    const noVracYes = Math.round(data.nonVracReturnValue * numberOfElements)
+    const vracYes = Math.round(data.vracInfiniteValue * numberOfElements)
+    const noVracYes = Math.round(data.nonVracInfiniteValue * numberOfElements)
 
     let queue: any[] = []    
 
