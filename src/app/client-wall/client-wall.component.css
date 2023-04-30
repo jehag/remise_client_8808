@@ -484,3 +484,31 @@ body {width: 100%; height: 100vh;}
 @keyframes p {
   from{--p:0}
 }
+
+/*
+
+
+------------------------------------------- Images Graph---------------------------------------------------
+
+
+*/
+
+.image-stack {
+  position: relative;
+}
+
+.bottom-image, .top-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bottom-image {
+  filter: grayscale(100%);
+}
+
+.top-image {
+  opacity: 1;
+  clip-path: inset(0 50% 0 0);
+  -webkit-clip-path: inset(0 50% 0 0);
+}

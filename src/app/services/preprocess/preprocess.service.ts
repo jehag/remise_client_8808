@@ -637,6 +637,9 @@ export class PreprocessService {
     questions.push(this.formattedQuestions.find((question) => {
       return question.symbol == 'Q8r1'
     })!);
+    questions.push(this.formattedQuestions.find((question) => {
+      return question.symbol == 'Q3n1'
+    })!);
     return questions;
   }
 
@@ -660,7 +663,7 @@ export class PreprocessService {
   getVehiculeRows(vehiculeNumber: number): any[] {
     let rows: any[] = [];
     this.excelData.forEach((row) => {
-      if(row['SCOL'] == vehiculeNumber){
+      if(row['Q3r' + vehiculeNumber] == 1){
         rows.push(row)
       }
     })

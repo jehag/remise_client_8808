@@ -640,7 +640,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
 
   drawScale(data: ScalesDataSetup[]) {
-    console.log(data)
     d3.select('.allScales').attr('y', 300);
     d3.selectAll('.scales')
       .data(data)
@@ -772,5 +771,37 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
         .style('justify-content', 'center')
         .style('width', '150px');
     })
+  }
+
+  drawImagesGraph(data: QuestionData[]) {
+    const imageNames: string[] = ['']
+    const g = d3.select('.images-graph');
+    console.log(g)
+
+    g.selectAll(".image-stack")
+      .data(data)
+      .enter()
+      .append("div")
+      .attr("class", "image-stack")
+      .style("position", "relative")
+      .append("img")
+      .attr('src', function(d){ return d.label})
+      .style('max-width', '300px')
+      .attr('class', 'bottom-image')
+      .style('filter', 'grayscale(100%)')
+      .style('position', 'absolute')
+      .style('top', 0)
+
+    
+    g.selectAll(".image-stack")
+      .data(data)
+      .append('img')
+      .attr('src', function(d){ return d.label})
+      .style('opacity', 1)
+      .style('clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
+      .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})  
+      .style('max-width', '300px')
+      .style('position', 'absolute')
+      .style('top', 0)
   }
 }

@@ -17,7 +17,8 @@ enum GraphType {
   Pyramid = 2,
   Tupperware = 3,
   Scales = 4,
-  Circles = 5
+  Circles = 5,
+  Images = 6
 }
 enum Province {
   BritishColumbia = 0,
@@ -111,6 +112,9 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Circles
         break;
       case GraphType.Circles:
+        this.graphType = GraphType.Images
+        break;
+      case GraphType.Images:
         this.graphType = GraphType.Map
         break;
     }
@@ -119,7 +123,7 @@ export class ClientWallComponent implements OnInit {
   previousGraph(){
     switch (this.graphType){
       case GraphType.Map:
-        this.graphType = GraphType.Circles;
+        this.graphType = GraphType.Images;
         break;
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
@@ -137,6 +141,9 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Scales;
         this.animate();
         break;
+      case GraphType.Images:
+        this.graphType = GraphType.Circles;
+        break;
     }
   }
 
@@ -152,6 +159,8 @@ export class ClientWallComponent implements OnInit {
     this.createScalesGraph();
     this.graphType = GraphType.Circles;
     this.createCirclesGraph();
+    this.graphType = GraphType.Images;
+    this.createImagesGraph();
     this.graphType = GraphType.Map;
   }
 
@@ -406,5 +415,24 @@ export class ClientWallComponent implements OnInit {
         this.vizService.rotateScale(animation.id, step.angle, step.delay);
       }
     }
+  }
+
+  createImagesGraph() {
+    const imagesData: QuestionData[] = this.getImagesData();
+    this.vizService.drawImagesGraph(imagesData);
+  }
+
+  getImagesData(): QuestionData[] {
+    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg', 'assets/images/home_delivery.png']
+    let imagesData: QuestionData[] = [];
+    for(let i = 1; i <= 5; i++){
+      if(i == 2 || i == 5){
+        continue
+      }
+      const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
+      const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
+      imagesData.push({label: imagesSrc[i-1], value: (separatedVehiculeData[0].length/vehiculeData.length)})
+    }
+    return imagesData;
   }
 }
