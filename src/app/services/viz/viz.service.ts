@@ -750,7 +750,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
     const delay_increments = 600; /* in ms */
     
-    
     const vracYes = Math.round(data.vracInfiniteValue * numberOfElements)
     const noVracYes = Math.round(data.nonVracInfiniteValue * numberOfElements)
 
@@ -829,8 +828,6 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
     g.append('div')
       .attr('class', 'images')
-      .style('display', 'flex')
-      .style('flex-direction', 'row')
       .selectAll(".image-stack")
       .data(data)
       .enter()
@@ -842,7 +839,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style("position", "relative")
       .append("img")
       .attr('src', function(d){ return d.label})
-      .style('max-width', '300px')
+      .style('height', '200px')
       .attr('class', 'bottom-image')
       .style("position", "relative")
       .style('filter', 'grayscale(100%)')
@@ -855,9 +852,10 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr('src', function(d){ return d.label})
       .attr('class', 'top-image')
       .style('opacity', 1)
-      .style('clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
-      .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})  
-      .style('max-width', '300px')
+      .style("transition", "clip-path 2s, -webkit-clip-path 2s")
+      .style('clip-path', function(d) {return 'inset(0 100% 0 0)';})
+      .style('-webkit-clip-path', function(d) {return 'inset(0 100% 0 0)';})
+      .style('height', '200px')
       .style('position', 'absolute')
       .attr('top', '0')
       .style('left', '0')
@@ -865,5 +863,24 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
 
     g.select('.title')
       .style('margin', '40px')
+  }
+
+  animateImagesGraph(data: QuestionData[]) {
+    const g = d3.select('.images-graph');
+    setTimeout(()=>{
+      g.selectAll(".top-image")
+        .data(data)
+        .style("transition", "clip-path 2s, -webkit-clip-path 2s")
+        .style('clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
+        .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
+    }, 500);
+  }
+
+  resetImagesGraph() {
+    const g = d3.select('.images-graph');
+
+    g.selectAll(".top-image")
+      .style('clip-path', function(d) {return 'inset(0 100% 0 0)';})
+      .style('-webkit-clip-path', function(d) {return 'inset(0 100% 0 0)';})
   }
 }

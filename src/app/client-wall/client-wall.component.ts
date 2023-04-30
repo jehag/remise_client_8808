@@ -113,8 +113,10 @@ export class ClientWallComponent implements OnInit {
         break;
       case GraphType.Circles:
         this.graphType = GraphType.Images
+        this.vizService.animateImagesGraph(this.getImagesData());
         break;
       case GraphType.Images:
+        this.vizService.resetImagesGraph();
         this.graphType = GraphType.Map
         break;
     }
@@ -124,6 +126,7 @@ export class ClientWallComponent implements OnInit {
     switch (this.graphType){
       case GraphType.Map:
         this.graphType = GraphType.Images;
+        this.vizService.animateImagesGraph(this.getImagesData());
         break;
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
@@ -142,6 +145,7 @@ export class ClientWallComponent implements OnInit {
         this.animate();
         break;
       case GraphType.Images:
+        this.vizService.resetImagesGraph();
         this.graphType = GraphType.Circles;
         break;
     }
