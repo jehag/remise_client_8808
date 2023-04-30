@@ -824,7 +824,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawImagesGraph(data: QuestionData[]) {
-    const g = d3.select('.images-graph');
+    const g = d3.select('.images-graph').style('text-align', 'center');
 
     g.append('div')
       .attr('class', 'images')
@@ -843,7 +843,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr('class', 'bottom-image')
       .style("position", "relative")
       .style('filter', 'grayscale(100%)')
-      .style('opacity', 0.2)
+      .style('opacity', 0.3)
 
     
     g.selectAll(".image-stack")
