@@ -177,7 +177,7 @@ export class ClientWallComponent implements OnInit {
     const g = this.vizService.generateG(this.margin, '.client-wall-graph');
     const color: string = "#FF4136";
     this.vizService.clientMapBackground(g, this.mapData, path, color, provinceAnswers);
-    this.vizService.placeClientWallTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
+    this.vizService.appendClientWallTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
   }
 
   getQuestionData(symbol: string, maxNumber: number) : QuestionDataHelper[] {
@@ -276,10 +276,9 @@ export class ClientWallComponent implements OnInit {
   createPyramidGraph() {
     const pyramidData: QuestionDataHelper = this.getPyramidData();
     const choices: string[] = pyramidData.questionData.map(function(d) {return d.label});
-    const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9"];
-    //const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#2ECC40", "#0074D9", "#B10DC9", "#FF007F", "#A0522D", "#AAAAAA", "#39CCCC"];
+    const colors: string[] = ["#FF4136", "#FF851B", "#FFDC00", "#80D479", "#9EDBF0"];
     const colorScale = this.scalesService.setColorScale(choices, colors);
-    this.vizService.placeClientWallTitle(d3.select(".pyramid-container"), 'Les "excuses" pour ne pas faire du vrac', 1000)
+    this.vizService.appendClientWallTitle(d3.select(".pyramid-container"), 'Les "excuses" pour ne pas faire du vrac', 1000)
     this.vizService.drawPyramid(choices, colorScale);
   }
 
@@ -300,7 +299,7 @@ export class ClientWallComponent implements OnInit {
     const g = this.vizService.generateG(this.margin, '.tupperware-graph');
     this.vizService.appendAxes(g);
     this.vizService.appendTupperwareGraphLabels(g);
-    this.vizService.placeClientWallTitle(g, 'Combien de personnes font leur épicerie en vrac?', this.graphSize.width, -40);
+    this.vizService.appendClientWallTitle(g, 'Combien de personnes font leur épicerie en vrac?', this.graphSize.width, -40);
     this.vizService.positionClientWallLabels(g, this.graphSize.height + 180, this.graphSize.width - 160, this.graphSize.height + 10);
 
     const xScale = this.scalesService.setTupperwareXScale(this.graphSize.width, labels);
@@ -331,6 +330,8 @@ export class ClientWallComponent implements OnInit {
 
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
+    const graph: any = d3.select('.scales-graph');
+    this.vizService.insertClientWallTitle(graph, "Quel est le mode de transport utilisé par les gens qui croient ou non que la terre contient une infinité de ressources?", this.graphSize.width, this.graphSize.height)
     this.vizService.drawScale(vehiculesData);
     for(let i = 0; i < vehiculesData.length; i++){
       this.animations.push(this.vizService.createBalanceAnimation("#scale" + i, vehiculesData[i]));
@@ -352,14 +353,13 @@ export class ClientWallComponent implements OnInit {
         nonVracInfiniteValue: this.preprocessService.getInfiniteResourcesValue(separatedVehiculeData[1])
       })
     }
-    console.log(vehiculesData)
     return vehiculesData;
   }
 
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
     const graph: any = d3.select('.donuts-graph');
-    this.vizService.placeDonutsTitle(graph, "Quel pourcentage des Canadiens trouvent que ces produits sont facilement achetable en vrac?", this.graphSize.width, this.graphSize.height)
+    this.vizService.insertClientWallTitle(graph, "Quels aliments sont les plus facilement accessibles en vrac selon les Canadiens?", this.graphSize.width, this.graphSize.height)
     this.vizService.drawCircles(circlesData);
   }
 
@@ -387,14 +387,14 @@ export class ClientWallComponent implements OnInit {
 
   createImagesGraph() {
     const imagesData: QuestionData[] = this.getImagesData();
-    this.vizService.placeClientWallTitle(d3.select('.images-graph'), 'Combien de gens font du vrac en fonction de leur mode de transport?', this.graphSize.width)
+    this.vizService.appendClientWallTitle(d3.select('.images-graph'), 'Combien de personnes font leur épicerie en vrac avec ces modes de transports?', this.graphSize.width)
     this.vizService.drawImagesGraph(imagesData);
   }
 
   getImagesData(): QuestionData[] {
-    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg', 'assets/images/home_delivery.jpg']
+    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg']
     let imagesData: QuestionData[] = [];
-    for(let i = 1; i <= 5; i++){
+    for(let i = 1; i <= 4; i++){
       const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
       const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
       imagesData.push({label: imagesSrc[i-1], value: (separatedVehiculeData[0].length/vehiculeData.length)})

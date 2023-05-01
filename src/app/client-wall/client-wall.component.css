@@ -251,7 +251,7 @@ body {width: 100%; height: 100vh;}
 }
 
 @keyframes fall-left {
-  0% { transform: rotate(-14deg) translate(20px, -60px); top: -500px; left: -20px; }
+  0% { transform: rotate(-14deg) translate(20px, -60px); top: -550px; left: -20px; }
   70% { transform: rotate(-14deg) translate(20px, -60px); top: 60px; left: -20px; }
   80% { transform: rotate(-3deg) translate(-20px, -60px); top: 40px; left: 20px; }
   90% { transform: rotate(8deg) translate(-20px, -60px); top: 60px; left: 20px; }
@@ -259,7 +259,7 @@ body {width: 100%; height: 100vh;}
 }
 
 @keyframes fall-right {
-  0% { transform: rotate(14deg) translate(-20px, -60px); top: -500px; left: 20px; }
+  0% { transform: rotate(14deg) translate(-20px, -60px); top: -550px; left: 20px; }
   70% { transform: rotate(14deg) translate(-20px, -60px); top: 60px; left: 20px; }
   80% { transform: rotate(3deg) translate(20px, -60px); top: 40px; left: -20px; }
   90% { transform: rotate(-8deg) translate(20px, -60px); top: 60px; left: -20px; }
@@ -274,11 +274,22 @@ body {width: 100%; height: 100vh;}
 
 
 */
+.scales-graph {
+  height: 50%;
+  width:100%;
+  position: relative;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
 .allScales {
+  display: flex;
   height: 50%;
   width:100%;
   position: relative;
   top:150%;
+  justify-content: center;
 }
 
 .scales {
