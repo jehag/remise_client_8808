@@ -637,6 +637,9 @@ export class PreprocessService {
     questions.push(this.formattedQuestions.find((question) => {
       return question.symbol == 'Q8r1'
     })!);
+    questions.push(this.formattedQuestions.find((question) => {
+      return question.symbol == 'Q3n1'
+    })!);
     return questions;
   }
 
@@ -660,7 +663,7 @@ export class PreprocessService {
   getVehiculeRows(vehiculeNumber: number): any[] {
     let rows: any[] = [];
     this.excelData.forEach((row) => {
-      if(row['SCOL'] == vehiculeNumber){
+      if(row['Q3r' + vehiculeNumber] == 1){
         rows.push(row)
       }
     })
@@ -680,17 +683,17 @@ export class PreprocessService {
     return [vracRows, nonVracRows];
   }
 
-  getCriseValue(totalRows: any[]) {
-    let crisers: number = 0;
-    let nonCrisers: number = 0;
+  getInfiniteResourcesValue(totalRows: any[]) {
+    let infinites: number = 0;
+    let noninfinites: number = 0;
     totalRows.forEach((row) => {
-      if((row['Q3r1'] && row['Q3r1'] == 1)){
-        crisers++;
-      } else if((row['Q3r2'] && row['Q3r2'] == 1) || (row['Q3r3'] && row['Q3r3'] == 1) || (row['Q3r4'] && row['Q3r4'] == 1)){
-        nonCrisers++;
+      if(row['Q18r2'] == 4 || row['Q18r2'] == 5){
+        infinites++;
+      } else if (row['Q18r2'] == 1 || row['Q18r2'] == 2){
+        noninfinites++;
       }
     })
-    return (crisers/(crisers + nonCrisers));
+    return (infinites/(infinites + noninfinites));
   }
   
 }

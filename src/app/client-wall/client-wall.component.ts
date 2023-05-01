@@ -17,7 +17,8 @@ enum GraphType {
   Pyramid = 2,
   Tupperware = 3,
   Scales = 4,
-  Circles = 5
+  Circles = 5,
+  Images = 6
 }
 enum Province {
   BritishColumbia = 0,
@@ -111,6 +112,11 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Circles
         break;
       case GraphType.Circles:
+        this.graphType = GraphType.Images
+        this.vizService.animateImagesGraph(this.getImagesData());
+        break;
+      case GraphType.Images:
+        this.vizService.resetImagesGraph();
         this.graphType = GraphType.Map
         break;
     }
@@ -119,7 +125,8 @@ export class ClientWallComponent implements OnInit {
   previousGraph(){
     switch (this.graphType){
       case GraphType.Map:
-        this.graphType = GraphType.Circles;
+        this.graphType = GraphType.Images;
+        this.vizService.animateImagesGraph(this.getImagesData());
         break;
       case GraphType.Pyramid:
         this.graphType = GraphType.Map;
@@ -137,6 +144,10 @@ export class ClientWallComponent implements OnInit {
         this.graphType = GraphType.Scales;
         this.animate();
         break;
+      case GraphType.Images:
+        this.vizService.resetImagesGraph();
+        this.graphType = GraphType.Circles;
+        break;
     }
   }
 
@@ -152,6 +163,8 @@ export class ClientWallComponent implements OnInit {
     this.createScalesGraph();
     this.graphType = GraphType.Circles;
     this.createCirclesGraph();
+    this.graphType = GraphType.Images;
+    this.createImagesGraph();
     this.graphType = GraphType.Map;
   }
 
@@ -318,74 +331,35 @@ export class ClientWallComponent implements OnInit {
 
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
-    let scaleXValue = -466;
     this.vizService.drawScale(vehiculesData);
     for(let i = 0; i < vehiculesData.length; i++){
       this.animations.push(this.vizService.createBalanceAnimation("#scale" + i, vehiculesData[i]));
-      scaleXValue += 300;
     }
   }
 
   getScalesData(): ScalesDataSetup[]{
-    let scolarityData: ScalesDataSetup[] = [];
-    const scolarityNames: string[] = ['Secondaire et primaire', 'Étude collégiales', 'Études universitaires'];
-    let secData: any[] = [];
-    secData.push(this.preprocessService.getVehiculeRows(1));
-    secData.push(this.preprocessService.getVehiculeRows(2));
-    const mergedSecData = [...secData[0], ...secData[1]];
-    const separatedSecData: any[] = this.preprocessService.getVracRows(mergedSecData);
-
-    let colData: any[] = [];
-    colData.push(this.preprocessService.getVehiculeRows(3));
-    colData.push(this.preprocessService.getVehiculeRows(4));
-    const mergedColData = [...colData[0], ...colData[1]];
-    const separatedColData: any[] = this.preprocessService.getVracRows(mergedColData);
-
-    let uniData: any[] = [];
-    uniData.push(this.preprocessService.getVehiculeRows(5));
-    uniData.push(this.preprocessService.getVehiculeRows(6));
-    const mergedUniData = [...uniData[0], ...uniData[1]];
-    const separatedUniData: any[] = this.preprocessService.getVracRows(mergedUniData);
-
-    scolarityData.push({
-      vehicule: scolarityNames[0],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedSecData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedSecData[1])
-    })
-
-    scolarityData.push({
-      vehicule: scolarityNames[1],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedColData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedColData[1])
-    })
-
-    scolarityData.push({
-      vehicule: scolarityNames[2],
-      vracReturnValue: this.preprocessService.getCriseValue(separatedUniData[0]),
-      nonVracReturnValue: this.preprocessService.getCriseValue(separatedUniData[1])
-    })
-
-    // let vehiculesData: ScalesDataSetup[] = [];
-    // const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
-    // for(let i = 1; i <= 5; i++){
-    //   if(i == 2 || i == 5){
-    //     continue;
-    //   }
-    //   const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
-    //   const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
-    //   vehiculesData.push({
-    //     vehicule: vehiculeNames[i-1],
-    //     vracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[0]),
-    //     nonVracReturnValue: this.preprocessService.getCriseValue(separatedVehiculeData[1])
-    //   })
-    // }
-    return scolarityData;
+    let vehiculesData: ScalesDataSetup[] = [];
+    const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
+    for(let i = 1; i <= 5; i++){
+      if(i == 2 || i == 5){
+        continue;
+      }
+      const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
+      const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
+      vehiculesData.push({
+        vehicule: vehiculeNames[i-1],
+        vracInfiniteValue: this.preprocessService.getInfiniteResourcesValue(separatedVehiculeData[0]),
+        nonVracInfiniteValue: this.preprocessService.getInfiniteResourcesValue(separatedVehiculeData[1])
+      })
+    }
+    console.log(vehiculesData)
+    return vehiculesData;
   }
 
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
     const graph: any = d3.select('.donuts-graph');
-    this.vizService.placeDonutsTitle(graph, "Les produits les plus simples à acheter sans emballage selon les Canadiens", this.graphSize.width, this.graphSize.height)
+    this.vizService.placeDonutsTitle(graph, "Quel pourcentage des Canadiens trouvent que ces produits sont facilement achetable en vrac?", this.graphSize.width, this.graphSize.height)
     this.vizService.drawCircles(circlesData);
   }
 
@@ -396,6 +370,9 @@ export class ClientWallComponent implements OnInit {
       const questionDataHelper: QuestionDataHelper = this.preprocessService.getQuestionData(choice, user, this.checkBoxChoices);
       circlesData.push({label: choice.split(' - ')[0], value: (questionDataHelper.questionData[3].value + questionDataHelper.questionData[4].value)})
     }
+    circlesData.sort((a, b) => {
+      return b.value - a.value;
+    })
     return circlesData;
   }
 
@@ -406,5 +383,22 @@ export class ClientWallComponent implements OnInit {
         this.vizService.rotateScale(animation.id, step.angle, step.delay);
       }
     }
+  }
+
+  createImagesGraph() {
+    const imagesData: QuestionData[] = this.getImagesData();
+    this.vizService.placeClientWallTitle(d3.select('.images-graph'), 'Combien de gens font du vrac en fonction de leur mode de transport?', this.graphSize.width)
+    this.vizService.drawImagesGraph(imagesData);
+  }
+
+  getImagesData(): QuestionData[] {
+    const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg', 'assets/images/home_delivery.jpg']
+    let imagesData: QuestionData[] = [];
+    for(let i = 1; i <= 5; i++){
+      const vehiculeData: any[] = this.preprocessService.getVehiculeRows(i);
+      const separatedVehiculeData: any[] = this.preprocessService.getVracRows(vehiculeData);
+      imagesData.push({label: imagesSrc[i-1], value: (separatedVehiculeData[0].length/vehiculeData.length)})
+    }
+    return imagesData;
   }
 }

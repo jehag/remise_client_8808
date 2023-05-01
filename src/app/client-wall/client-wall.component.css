@@ -154,6 +154,7 @@ body {width: 100%; height: 100vh;}
   font-weight: bold;
   text-decoration: none;
   user-select: none;
+  z-index: 1;
 }
 
 .circle-link:hover {
@@ -483,4 +484,47 @@ body {width: 100%; height: 100vh;}
 }
 @keyframes p {
   from{--p:0}
+}
+
+/*
+
+
+------------------------------------------- Images Graph---------------------------------------------------
+
+
+*/
+
+:host /deep/ .images {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  display: flex;
+  width: 80%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.images-graph {
+  flex-direction: column;
+}
+.image-stack {
+  position: relative;
+}
+
+.bottom-image, .top-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bottom-image {
+  filter: grayscale(100%);
+}
+
+.top-image {
+  opacity: 1;
+  clip-path: inset(0 50% 0 0);
+  -webkit-clip-path: inset(0 50% 0 0);
 }

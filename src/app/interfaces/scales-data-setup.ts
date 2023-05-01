@@ -1,5 +1,5 @@
 export interface ScalesDataSetup {
     vehicule: string,
-    vracReturnValue: number,
-    nonVracReturnValue: number;
+    vracInfiniteValue: number,
+    nonVracInfiniteValue: number;
 }
