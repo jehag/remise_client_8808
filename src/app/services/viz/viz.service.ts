@@ -824,7 +824,9 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawImagesGraph(data: QuestionData[]) {
-    const g = d3.select('.images-graph').style('text-align', 'center');
+    const g = d3.select('.images-graph')
+      .style('text-align', 'center')
+      .style('justify-content', 'space-around')
 
     g.append('div')
       .attr('class', 'images')
