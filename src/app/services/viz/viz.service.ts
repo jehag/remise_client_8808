@@ -94,7 +94,7 @@ export class VizService {
     }
   }
 
-  placeClientWallTitle (g: any, title: string, width: number, height:number = -20) {
+  appendClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.append('text')
       .attr('class', 'title')
       .attr('x', width/2)
@@ -103,10 +103,11 @@ export class VizService {
       .style('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('margin-bottom', '30px')
+      .style('line-height', '50px')
       .text(title)
   }
 
-  placeDonutsTitle (g: any, title: string, width: number, height:number = -20) {
+  insertClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.insert("text",":first-child")
       .attr('class', 'title')
       .attr('x', width/2)
@@ -115,6 +116,7 @@ export class VizService {
       .style('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('margin', '30px')
+      .style('line-height', '50px')
       .text(title)
   }
 
@@ -665,7 +667,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
   drawScaleLegend() {
-    const legendItemsNames: string[] = ['Fait du vrac', 'Ne fait pas de vrac'];
+    const legendItemsNames: string[] = ['Fait du vrac', 'Ne fait pas de vrac', "Fait l'épicerie en auto", "Fait l'épicerie en bus", "Fait l'épicerie en vélo", "Infinité de ressources", "Nombre fini de ressources"];
     d3.select('.allScales')
       .append('div')
       .attr('class', 'legend')
@@ -681,24 +683,28 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('font-weight', 'bold')
       .style('margin-bottom', '10px')
 
-    d3.select('.legend')
+    const legendNames: string[] = ['happy_tupperware.png', 'garbage.png', 'car.png', 'bus.png', 'bike.png', 'thumbsup.png']
+    for(let name of legendNames){
+      d3.select('.legend')
       .append('div')
       .attr('class', 'legendItem')
       .style('display', 'flex')
       .style('flex-direction', 'row')
       .append('img')
-      .attr('src', "assets/images/happy_tupperware.png")
+      .attr('src', "assets/images/" + name)
       .attr("width", 30)
       .attr("height", 30)
       .style('margin', '0 5px 5px 0')
-    
+    }
+
     d3.select('.legend')
       .append('div')
       .attr('class', 'legendItem')
       .style('display', 'flex')
       .style('flex-direction', 'row')
       .append('img')
-      .attr('src', "assets/images/garbage.png")
+      .attr('src', "assets/images/thumbsup.png")
+      .attr('transform', 'rotate(180deg)')
       .attr("width", 30)
       .attr("height", 30)
       .style('margin', '0 5px 5px 0')
@@ -837,7 +843,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr("class", "image-stack")
       .style('display', 'flex')
       .style('flex-direction', 'column')
-      .style('margin-right', '10px')
+      .style('margin', '30px')
       .style("position", "relative")
       .append("img")
       .attr('src', function(d){ return d.label})
@@ -862,6 +868,15 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .attr('top', '0')
       .style('left', '0')
 
+    g.selectAll(".image-stack")
+      .data(data)
+      .append('text')
+      .text(function(d) { return Math.round(d.value * 100) + '%'})
+      .style('text-align', 'center')
+      .style('font-size', '25px')
+      .style('font-weight', 'bold')
+      .style('margin', '20px')
+
 
     g.select('.title')
       .style('margin', '40px')
@@ -873,8 +888,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       g.selectAll(".top-image")
         .data(data)
         .style("transition", "clip-path 2s, -webkit-clip-path 2s")
-        .style('clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
-        .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (d.value * 100) + '% 0 0)';})
+        .style('clip-path', function(d) {return 'inset(0 ' + (100 - d.value * 100) + '% 0 0)';})
+        .style('-webkit-clip-path', function(d) {return 'inset(0 ' + (100 - d.value * 100) + '% 0 0)';})
     }, 500);
   }
 
