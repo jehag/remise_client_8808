@@ -674,7 +674,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('position','absolute')
       .style('right', 0)
       .style('top', 0)
-      .style('transform', 'translate(150%, -150%)')
+      .style('transform', 'translate(-50%, -100%)')
       .style('display','flex')
       .style('flex-direction','column')
       .append('text')
@@ -683,7 +683,7 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('font-weight', 'bold')
       .style('margin-bottom', '10px')
 
-    const legendNames: string[] = ['happy_tupperware.png', 'garbage.png', 'car.png', 'bus.png', 'bike.png', 'thumbsup.png']
+    const legendNames: string[] = ['happy_tupperware.png', 'garbage.png', 'car_img.png', 'bus_img.png', 'bike_img.png', 'tumb.png']
     for(let name of legendNames){
       d3.select('.legend')
       .append('div')
@@ -703,8 +703,8 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('display', 'flex')
       .style('flex-direction', 'row')
       .append('img')
-      .attr('src', "assets/images/thumbsup.png")
-      .attr('transform', 'rotate(180deg)')
+      .attr('src', "assets/images/tumb.png")
+      .style('transform', 'scaleX(-1) scaleY(-1)')
       .attr("width", 30)
       .attr("height", 30)
       .style('margin', '0 5px 5px 0')
