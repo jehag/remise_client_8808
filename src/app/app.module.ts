@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PhoneComponent } from './phone/phone.component';
-import { WallComponent } from './wall/wall.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ClientWallComponent } from './client-wall/client-wall.component';
@@ -19,7 +18,6 @@ import { ClientWallComponent } from './client-wall/client-wall.component';
   declarations: [
     AppComponent,
     PhoneComponent,
-    WallComponent,
     ClientWallComponent,
   ],
   imports: [
