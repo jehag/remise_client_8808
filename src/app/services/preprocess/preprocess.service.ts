@@ -61,6 +61,9 @@ export class PreprocessService {
   constructor(private http: HttpClient) {
   }
 
+  /**
+ * Saves the data from the excel file excelPageDonnees
+ */
   async readExcelData(): Promise<void> {
     this.http.get('assets/data/excelPageDonnees.xlsx', {responseType: 'arraybuffer'})
       .subscribe(response => {
@@ -74,6 +77,9 @@ export class PreprocessService {
       });
   }
 
+  /**
+ * Saves the questions from the excel file excelPageQuestions
+ */
   async readExcelQuestions(): Promise<void> {
     this.http.get('assets/data/excelPageQuestions.xlsx', {responseType: 'arraybuffer'})
       .subscribe(response => {
@@ -90,6 +96,9 @@ export class PreprocessService {
       });
   }
 
+  /**
+ * Processes the excel questions so that they are in an easier format to handle
+ */
   processQuestions(): void {
     for(let i = 0; i < this.excelQuestions.length; i++){
       if(!this.excelQuestions[i]["__EMPTY"] && !this.excelQuestions[i]["__EMPTY_1"]){
@@ -133,6 +142,12 @@ export class PreprocessService {
     }
   }
 
+  /**
+ * Checks if the question is an environmental question that we have to show
+ *
+ * @param {string} symbol The symbol to analyze
+ * @returns {boolean} True if it is one and false if it isn't
+ */
   isEnvironmentalQuestion(symbol:string): boolean{
     for(let i = 2; i <= 18; i++){
       let correctLetters: string = 'Q' + i;
@@ -143,6 +158,9 @@ export class PreprocessService {
     return false;
   }
 
+  /**
+ * Formats the excel questions so that they are in an better format to show to the user
+ */
   formatQuestions(){
     for(let i = 0; i < this.processedExcelQuestions.length; i++){
       let excelQuestion: ExcelQuestions = {
@@ -170,6 +188,12 @@ export class PreprocessService {
     }
   }
 
+  /**
+ * Checks if the question is an NO TO question
+ *
+ * @param {ExcelQuestions} question The question to analyze
+ * @returns {boolean} True if it is one and false if it isn't
+ */
   isNoToQuestion(question: ExcelQuestions): boolean {
     if(question.choices.get(0) && question.choices.get(0)?.includes('NO TO')){
       return true;
@@ -177,6 +201,12 @@ export class PreprocessService {
     return false;
   }
 
+  /**
+ * Formats the NO TO excel questions so that they are in an better format to show to the user
+ * 
+ * @param {number} i Index of the question to analyze
+ * @returns {[ExcelQuestions, number]} The new excel question with the index needed to continue the formatting
+ */
   fixNoToQuestions(i: number) : [ExcelQuestions, number] {
     let excelQuestion: ExcelQuestions = {
       "symbol": "",
@@ -209,6 +239,12 @@ export class PreprocessService {
     return [excelQuestion, i-1];
   }
 
+  /**
+ * Formats the same theme excel questions so that they are in an better format to show to the user
+ * 
+ * @param {number} i Index of the question to analyze
+ * @returns {[ExcelQuestions, number]} The new excel question with the index needed to continue the formatting
+ */
   fixSameThemeQuestions(i: number) : [ExcelQuestions, number] {
     let excelQuestion: ExcelQuestions = {
       "symbol": "",
@@ -237,6 +273,12 @@ export class PreprocessService {
     return [excelQuestion, i-1];
   }
 
+  /**
+ * Gets the data of the user that was chosen
+ *
+ * @param {boolean} man The sex of the user that has been chosen
+ * @returns {*} The data of the user
+ */
   getUserData(man:boolean){
     let data;
     if(man){
@@ -251,6 +293,14 @@ export class PreprocessService {
     return data;
   }
 
+  /**
+ * Gets the data for a normal question with the user's parameters
+ *
+ * @param {string} questionName The name of the question to get
+ * @param {*} user The data of the user that has been chosen
+ * @param {CheckboxChoices} checkboxChoices The parameter choices of the user
+ * @returns {QuestionDataHelper} The data of the question
+ */
   getQuestionData(questionName:string, user: any, checkboxChoices: CheckboxChoices) : QuestionDataHelper {
     let questionDataHelper:QuestionDataHelper = {
       questionData: [],
@@ -297,6 +347,14 @@ export class PreprocessService {
     return questionDataHelper;
   }
 
+  /**
+ * Gets all data for a question with the user's parameters
+ *
+ * @param {ExcelQuestions} question The question to fetch
+ * @param {*} user The data of the user that has been chosen
+ * @param {CheckboxChoices} checkboxChoices The parameter choices of the user
+ * @returns {Map<number, number>} The data of the question <choice index, value>
+ */
   getLabelData(question: ExcelQuestions, user: any, checkboxChoices: CheckboxChoices): Map<number,number> {
     let labelData: Map<number,number> = new Map<number, number>();
     if(question){
@@ -315,6 +373,14 @@ export class PreprocessService {
     return labelData;
   } 
 
+  /**
+ * Checks if the row corresponds to the user choice if the user checked that box
+ *
+ * @param {*} row The row to compare the user to
+ * @param {*} user The data of the user that has been chosen
+ * @param {CheckboxChoices} checkboxChoices The parameter choices of the user
+ * @returns {boolean} True if the row is in line with the user and false if it isn't
+ */
   checkForChecks(row: any, user: any, checkboxChoices: CheckboxChoices): boolean {
     if(checkboxChoices.myAge && !this.checkIfSameSituation(row, user, 'age')){
       return false;
@@ -343,10 +409,24 @@ export class PreprocessService {
     return true;
   }
 
+  /**
+ * Checks if the row's column corresponds to the user's column
+ *
+ * @param {*} row The row to compare the user to
+ * @param {*} user The data of the user that has been chosen
+ * @param {string} situation The chosen column to compare the user and the row to
+ * @returns {boolean} True if the row is in the same situation as the user and false if it isn't
+ */
   checkIfSameSituation(row: any, user: any, situation:string) : boolean{
     return row[situation] == user[situation];
   }
 
+  /**
+ * Gets the formatted symbol with a question's name
+ *
+ * @param {string} questionName The name of the question
+ * @returns {string} The question's symbol
+ */
   getFormattedSymbolWithQuestion(questionName: string): string{
     const question = this.formattedQuestions.find((question) => {
       return question.question == questionName
@@ -357,6 +437,12 @@ export class PreprocessService {
     return 'unknown question';
   }
 
+  /**
+ * Gets the questions that have the same theme as the symbol
+ *
+ * @param {string} symbol The symbol of the questions
+ * @returns {string} The name of all sub questions that are linked by the theme
+ */
   getThemeQuestions(symbol: string): string[] {
     let themeQuestions: string[] = [];
     this.processedExcelQuestions.forEach((question) => {
@@ -373,6 +459,14 @@ export class PreprocessService {
     return themeQuestions;
   }
 
+  /**
+ * Gets the data for a NO TO question with the user's parameters
+ *
+ * @param {string} symbolStart The start of the symbol of the questions to get
+ * @param {*} user The data of the user that has been chosen
+ * @param {CheckboxChoices} checkboxChoices The parameter choices of the user
+ * @returns {QuestionDataHelper} The data of the question
+ */
   getNoToQuestionData(symbolStart: string, user: any, checkboxChoices: CheckboxChoices): QuestionDataHelper {
     let questions: ExcelQuestions[] = [];
     this.processedExcelQuestions.forEach((question) => {
@@ -427,6 +521,12 @@ export class PreprocessService {
     return questionDataHelper;
   }
   
+  /**
+ * Initializes the question data for question 10
+ *
+ * @param {string} symbolStart The start of the symbol of the questions to get
+ * @returns {QuestionData[]} The inital data of the question
+ */
   initializeQ10QuestionData(symbolStart:string): QuestionData[] {
     let questionData: QuestionData[] = [];
     const choices: string[] = this.getQ10Choices(symbolStart);
@@ -439,6 +539,13 @@ export class PreprocessService {
     return questionData;
   }
 
+  /**
+ * Gets the index of the data list where the Q10 question is
+ *
+ * @param {QuestionData[]} questionDataList The list of data that we're analyzing
+ * @param {sting} symbol The symbol of the question we're looking for
+ * @returns {number} The index of the question
+ */
   findQ10index(questionDataList: QuestionData[], symbol: string): number {
     let label = '';
     if(symbol.includes('Q10A')){
@@ -455,6 +562,13 @@ export class PreprocessService {
     return -1;
   }
 
+  /**
+ * Gets the real name of a subquestion with it's formatted question and subquestion
+ *
+ * @param {string} selectedQuestion The formatted envelopping question
+ * @param {sting} subQuestion The formatted subquestion
+ * @returns {number} The name of the subquestion
+ */
   getSubQuestionRealName(selectedQuestion:string, subQuestion: string): string {
     const question = this.formattedQuestions.find((question) => {
       return question.question == selectedQuestion;
@@ -470,6 +584,13 @@ export class PreprocessService {
     return 'could not find question';
   }
 
+  /**
+ * Gets the symbol of the question that the user answered using the formatted question name 
+ *
+ * @param {string} questionName The formatted envelopping question
+ * @param {*} user The user data
+ * @returns {string} The symbol of the question
+ */
   getUserProcessedSymbolWithFormattedQuestion(questionName: string, user: any): string {
     const question = this.formattedQuestions.find((question) => {
       return question.question == questionName
@@ -490,6 +611,12 @@ export class PreprocessService {
     return 'Unknown Question';
   }
 
+  /**
+ * Gets the processed symbol of the question using the processed question name 
+ *
+ * @param {string} questionName The formatted envelopping question
+ * @returns {string} The symbol of the question
+ */
   getProcessedSymbolWithSubQuestionName(questionName: string): string{
     const question = this.processedExcelQuestions.find((question) => {
       return question.question == questionName
@@ -497,6 +624,13 @@ export class PreprocessService {
     return question? question.symbol: 'unknown question'
   }
 
+  /**
+ * Gets the choice name of a certain value
+ *
+ * @param {string} symbol The processed symbol of the question
+ * @param {number} value The value of the choice
+ * @returns {string} The choice name
+ */
   getChoiceFromData(symbol: string, value: number) : string{
     const question = this.processedExcelQuestions.find((question) => {
       return question.symbol == symbol;
@@ -512,76 +646,12 @@ export class PreprocessService {
     return 'Unknown Question';
   }
 
-  getWallQuestions(): ExcelQuestions[] {
-    let wallQuestions: ExcelQuestions[] = [];
-    this.formattedQuestions.forEach((question) => {
-      if(!question.symbol.includes('r')){
-        wallQuestions.push(question);
-      } else {
-        let themeQuestions: string[] = this.getThemeQuestions(question.symbol);
-        for(let themequestion of themeQuestions){
-          let newQuestion: ExcelQuestions = {
-            question: question.question,
-            symbol: question.symbol,
-            savedSymbol: question.savedSymbol,
-            choices: question.choices
-          };
-          newQuestion.question = themequestion + ' - ' + newQuestion.question;
-          wallQuestions.push(newQuestion);
-        }
-      }
-    })
-    return wallQuestions;
-  }
-
-  getMostPopularAnswer(questionData: QuestionData[]): string {
-    const maxData = questionData.reduce((max: QuestionData, current: QuestionData) =>
-      max.value > current.value ? max : current
-    );
-    if(maxData.value == 0){
-      return 'Aucune réponse'
-    }
-    return maxData.label;
-  }
-
-  getQuestionChoices(question: ExcelQuestions): string[] {
-    let choices: string[] = [];
-    if(question.symbol.includes('n')){
-      let symbolStart = question.symbol.substring(0,question.symbol.indexOf('n'));
-      if(symbolStart.includes('Q10')){
-        choices = this.getQ10Choices(symbolStart);
-      } else {
-        this.processedExcelQuestions.forEach((processedQuestion) => {
-          if(this.isEnvironmentalQuestion(processedQuestion.symbol) && processedQuestion.symbol.includes(symbolStart)){
-            choices.push(processedQuestion.question.split(' - ')[0]);
-          }
-        })
-      }
-    } else if(question.symbol.includes('r')){
-      let questionName: string = '';
-      let questionStart: string = question.question.split(' - ')[0].trim();
-      for(let choice of question.choices.values()){
-        if(choice.includes(questionStart)){
-          questionName = choice;
-        }
-      }
-      
-      const subQuestion = this.processedExcelQuestions.find((processedQuestion) => {
-        return processedQuestion.question == questionName;
-      })
-      
-      for(let choice of subQuestion!.choices.values()){
-        choices.push(choice);
-      }
-
-    } else {
-      for(let choice of question.choices.values()){
-        choices.push(choice);
-      }
-    }
-    return choices;
-  }
-
+  /**
+ * Gets all possible choices for a Q10 question
+ *
+ * @param {string} symbol The symbol of the question
+ * @returns {string[]} All possible choices for that Q10 question
+ */
   getQ10Choices(symbol:string): string[] {
     if(symbol.includes('Q10A')){
       return this.getQ10AChoices();
@@ -589,25 +659,33 @@ export class PreprocessService {
     return this.getQ10BChoices();
   }
 
+  /**
+ * Gets all possible choices for a Q10A
+ *
+ * @returns {string[]} All possible choices for Q10A
+ */
   getQ10AChoices(): string[] {
     return ['Manque de disponibilité',"Trop d'efforts",'Trop coûteux','Ne connais pas assez',
     "Insatisfait de l'offre", "Par souci d'hygiène", "Manque d'information sur les produits",
     "Appréciation des emballages", "Pas besoin de grande quantité", "Autre"];
   }
 
+  /**
+ * Gets all possible choices for a Q10B
+ *
+ * @returns {string[]} All possible choices for Q10B
+ */
   getQ10BChoices(): string[] {
     return ["Je souhaite protéger l'environnement","Je souhaite réduire ma facture d'épicerie","Je souhaite acheter des produits qui sont bons pour la santé",
     "Cette option est disponible proche de chez moi",'Autres (préciser)',"Aucune raison en particulier / je ne suis pas intéressé(e)"];
   }
 
-  fixChoices(choicesList:string[]): Map<number,string> {
-    let choices: Map<number,string> = new Map();
-    for(let i = 0; i < choicesList.length; i++){
-      choices.set(i + 1, choicesList[i]);
-    }
-    return choices;
-  }
-
+  /**
+ * Repairs the choices of specific questions
+ *
+ * @param {ExcelQuestions} oldQuestion The question to be repaired
+ * @returns {ExcelQuestions} The repaired question
+ */
   fixSpecificQuestions(oldQuestion:ExcelQuestions): ExcelQuestions {
     let newQuestion: ExcelQuestions = {
       symbol: oldQuestion.symbol,
@@ -615,13 +693,23 @@ export class PreprocessService {
       choices: oldQuestion.choices
     }
     if(newQuestion.symbol.includes('Q13')){
-      newQuestion.choices = this.fixChoices(['Plus prioritaire','Moyennement prioritaire','Minimalement prioritaire','Moins prioritaire']);
+      const choicesList = ["Plus prioritaire","Moyennement prioritaire","Minimalement prioritaire","Moins prioritaire"]
+      let choices: Map<number,string> = new Map();
+      for(let i = 0; i < choicesList.length; i++){
+        choices.set(i + 1, choicesList[i]);
+      }
+      newQuestion.choices = choices;
     } else if (newQuestion.symbol == 'age'){
       newQuestion.choices.delete(1);
     }
     return newQuestion;
   }
 
+  /**
+ * Gets the questions that have to be shown on the wall
+ *
+ * @returns {ExcelQuestions[]} The questions to be shown
+ */
   getClientWallQuestions(): ExcelQuestions[] {
     let questions: ExcelQuestions[] = []
     const vrac = this.formattedQuestions.find((question) => {
@@ -643,6 +731,12 @@ export class PreprocessService {
     return questions;
   }
 
+  /**
+ * Changes Q5 data into a Yes or No data
+ *
+ * @param {QuestionDataHelper} questionData The data to analyse
+ * @returns {QuestionDataHelper} The Yes or No data
+ */
   getYesOrNoQ5Data(questionData: QuestionDataHelper): QuestionDataHelper{
     let newQuestionDataHelper: QuestionDataHelper = {
       questionData: [],
@@ -660,6 +754,12 @@ export class PreprocessService {
     return newQuestionDataHelper;
   }
 
+  /**
+ * Gets all rows that answered i as their vehicule of choice
+ *
+ * @param {number} vehiculeNumber The vehicule answer
+ * @returns {any[]} The vehicule rows
+ */
   getVehiculeRows(vehiculeNumber: number): any[] {
     let rows: any[] = [];
     this.excelData.forEach((row) => {
@@ -670,6 +770,12 @@ export class PreprocessService {
     return rows;
   }
 
+  /**
+ * Separates an array of rows into two arrays with one that has all rows that do vrac and the other has the contrary
+ *
+ * @param {any[]} totalRows All rows
+ * @returns {any[]} Both arrays
+ */
   getVracRows(totalRows: any[]): any[] {
     let vracRows: any[] = [];
     let nonVracRows: any[] = [];
@@ -683,7 +789,13 @@ export class PreprocessService {
     return [vracRows, nonVracRows];
   }
 
-  getInfiniteResourcesValue(totalRows: any[]) {
+  /**
+ * Gets the percentage of answers that answered yes to the Q18r2 question.
+ *
+ * @param {any[]} totalRows All rows
+ * @returns {number} Percentage of yes
+ */
+  getInfiniteResourcesValue(totalRows: any[]): number {
     let infinites: number = 0;
     let noninfinites: number = 0;
     totalRows.forEach((row) => {

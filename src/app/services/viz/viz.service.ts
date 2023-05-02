@@ -12,6 +12,14 @@ import { ScalesDataSetup } from 'src/app/interfaces/scales-data-setup';
 export class VizService {
 
   constructor() { }
+
+  /**
+ * Generates the SVG element g which will contain the graph base.
+ *
+ * @param {Margin} Margin The margin of the page
+ * @param {string} graphClass The name of the class of the graph
+ * @returns {*} The d3 Selection for the created g element
+ */
   generateG (margin: Margin, graphClass: string) {
     return d3.select(graphClass)
       .select('svg')
@@ -20,6 +28,13 @@ export class VizService {
         'translate(' + margin.left + ',' + margin.top + ')')
   }
 
+  /**
+ * Sets the size of the SVG canvas containing the graph.
+ *
+ * @param {number} width The desired width
+ * @param {number} height The desired height
+ * @param {string} graphId The name of the Id of the graph
+ */
   setCanvasSize (width: number, height: number, graphId: string) {
     d3.select(graphId)
       .attr('width', width)
@@ -27,6 +42,11 @@ export class VizService {
       .attr("xmlns", "http://www.w3.org/2000/svg")
   }
 
+  /**
+ * Appends SVG g elements which will contain the axes.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendAxes (g: any) {
     g.append('g')
       .attr('class', 'x axis')
@@ -36,6 +56,11 @@ export class VizService {
       .style('transform', 'translate(10px, 0px)')
   }
 
+  /**
+ * Appends the labels for the x axis
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
@@ -43,6 +68,11 @@ export class VizService {
       .attr('font-size', 15)
   }
 
+    /**
+ * Appends the labels for the x and y axis on the tupperware graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendTupperwareGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
@@ -55,6 +85,13 @@ export class VizService {
       .attr('font-size', 25)
   }
 
+  /**
+ * Places the graph's title.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ */
   placeTitle (g: any, title: string, width: number) {
     if(title.length > 60){
 
@@ -94,6 +131,14 @@ export class VizService {
     }
   }
 
+  /**
+ * Appends the graph's title on the wall.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   appendClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.append('text')
       .attr('class', 'title')
@@ -107,6 +152,14 @@ export class VizService {
       .text(title)
   }
 
+  /**
+ * Prepends the graph's title on the wall.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   insertClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.insert("text",":first-child")
       .attr('class', 'title')
@@ -120,6 +173,13 @@ export class VizService {
       .text(title)
   }
 
+  /**
+ * Positions the x and y axis labels
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   positionLabels (g: any, width: number, height: number) {
     g.selectAll('.y.axis-text')
       .attr('transform', 'translate( -50 ,' + height / 2 + '), rotate(-90)')
@@ -128,6 +188,14 @@ export class VizService {
       .attr('transform', 'translate(' + width / 2 + ',' + (height + 50) + ')')
   }
 
+  /**
+ * Positions the x and y axis labels on the wall
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} yHeight The height of the graph in y
+ * @param {number} xWidth The width of the graph in x
+ * @param {number} xHeight The height of the graph in x
+ */
   positionClientWallLabels (g: any, yHeight: number, xWidth : number, xHeight: number) {
     g.selectAll('.y.axis-text')
       .attr('transform', 'translate( -50 ,' + yHeight / 2 + '), rotate(-90)')
@@ -136,12 +204,23 @@ export class VizService {
       .attr('transform', 'translate(' + xWidth / 2 + ',' + (xHeight + 50) + ')')
   }
 
+  /**
+ * Draws the X axis at the bottom of the diagram.
+ *
+ * @param {*} xScale The scale to use to draw the axis
+ * @param {number} height The height of the graph
+ */
   drawXAxis (xScale: any, height: number) {
     d3.select('.x.axis')
       .attr('transform', 'translate( 0, ' + height + ')')
       .call(d3.axisBottom(xScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
   }
 
+  /**
+ * Draws the Y axis to the left of the diagram.
+ *
+ * @param {*} yScale The scale to use to draw the axis
+ */
   drawYAxis (yScale: any) {
     const maxLineLength = 35;
     d3.select('.y.axis')
@@ -202,6 +281,13 @@ export class VizService {
     })
   }
 
+  /**
+ * Draws the legend for the phone
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} width The width of the graph, used to place the legend
+ * @param {*} colorScale The color scale to use
+ */
   drawLegend (g: any, width: number, colorScale: any) {
     g.append('g')
       .attr('class', 'legendOrdinal')
@@ -217,6 +303,15 @@ export class VizService {
       .call(legendOrdinal)
   }
 
+  /**
+ * Displays the bars for the phone graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {QuestionData[]} data The data to be displayed
+ * @param {*} xScale The scale to use to draw on the x axis
+ * @param {*} yScale The scale to use to draw on the y axis
+ * @param {string} userChoice The user's choice
+ */
   drawBars(g:any, data: QuestionData[], xScale:any, yScale:any, userChoice: string) {
     g.selectAll(".bar")
       .data(data)
@@ -229,6 +324,14 @@ export class VizService {
       .attr('x', '10px')
   }
 
+  /**
+ * Displays the tuppeware bars for the wall graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {QuestionData[]} data The data to be displayed
+ * @param {*} xScale The scale to use to draw on the x axis
+ * @param {*} yScale The scale to use to draw on the y axis
+ */
   drawTupperwareBars(g:any, data: QuestionData[], xScale:any, yScale:any) {
     const ware = `
     <div class="ware"></div>
@@ -291,68 +394,21 @@ export class VizService {
 
   }
 
+  /**
+ * Deletes the graph
+ *
+ * @param {string} graphId The id of the graph
+ */
   deleteGraph(graphId: string){
     const g = d3.select(graphId).selectAll('*').remove();
     g.remove();
   }
 
-  drawWallBars(g:any, data: any, xScale:any, yScale:any, colors: string[], groupLabels: string[]){
-    let currentGroup = 0;
-    var groups = g
-      .selectAll("g.bars")
-      .data(data)
-      .enter().append("g")
-      .attr("class", "bars")
-      .style("fill", function(d: any, i: any) { return colors[i]; })
-      .style("stroke", "#000");
-    
-    groups.selectAll("rect")
-      .data(function(d: any) { return d; })
-      .enter()
-      .append("rect")
-      .attr("x", function(d: any) { return xScale(Math.round(d[0])) + 10; })
-      .attr("y", function(d: any) { return yScale(d.data.label); })
-      .attr("height", yScale.bandwidth())
-      .attr("width", function(d: any) { return xScale(Math.round(d[1])) - xScale(Math.round(d[0]));})
-      .each(function(d: any, i: any, nodes: any) {
-        if(Math.round(d.data[groupLabels[currentGroup]]) >= 3){
-          d3.select(nodes[i].parentNode)
-          .append("text")
-          .text(function() {
-            return Math.round(d.data[groupLabels[currentGroup]]) + "%"
-          })
-          .attr("x", (xScale(d[0]) + (xScale(d[1]) - xScale(d[0])) / 2) + 10)
-          .attr("y", yScale(d.data.label) + yScale.bandwidth() / 2)
-          .attr("text-anchor", "middle")
-          .attr("dy", ".35em")
-          .style("fill", "white");
-        }
-        if(i == data[0].length - 1){
-          currentGroup++;
-        }
-      });
-
-  }
-
-  stackData(data: any[], keys: string[]) {
-    return d3.stack().keys(keys)(data);
-  }
-
-mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: MapDataSetup[]) {
-    g.append('g')
-    .selectAll('path')
-    .data(data.features)
-    .enter()
-    .append('path')
-    .attr('d', path)
-    .attr('fill', function(d: any){ 
-      const province = provinceAnswers.find((province) => {
-        return province.province == d.properties.name;
-      })
-      return colorScale(province!.answer)})
-    .style('stroke', 'black')
-  }
-
+  /**
+ * Sets up the projection to be used for the map
+ *
+ * @returns {*} The projection to use to trace the map elements
+ */
   getProjection (data: any, width: number, height:number) {
     return d3.geoAzimuthalEquidistant()
       .fitSize([width, height], data)
@@ -360,112 +416,23 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .translate([(width/2) - 150, height + height/2 + 50])
   }
   
+  /**
+ * Sets up the path to be used for the map
+ *
+ * @param {*} projection The projection used to trace the map elements
+ * @returns {*} The path to use to trace the map elements
+ */
   getPath (projection: d3.GeoProjection) {
     return d3.geoPath()
       .projection(projection)
   }
 
-  drawMapLegend (g:any, width: number, colorScale: any) {
-    g.append('g')
-      .attr('class', 'legendOrdinal')
-      .attr('transform', 'translate(' + (width - 100) + ', 40)')
-      .append('text')
-      .text('Légende')
-      .attr('x', 20)
-      .attr('y', -20)
-      .attr('font-size', 20)
-      .attr('font-weight', 'bold')
-  
-    var legendOrdinal = (legendColor() as any)
-      .shape('path', d3.symbol().type(d3.symbolCircle).size(300)()!)
-      .shapePadding(2)
-      .scale(colorScale)
-
-    g.selectAll('.legendOrdinal')
-      .call(legendOrdinal)
-      .selectAll('.swatch')
-      .style('stroke', '#000');
-
-    let offset = 0;
-    g.selectAll('.legendOrdinal')
-      .selectAll('.label')
-      .text(function(d: any, i: any, nodes: any){
-        const transform: string = d3.select(nodes[i].parentNode).attr('transform');
-        const parsedY: string = transform.split(',')[1].substring(0, transform.split(',')[1].length - 2);
-        const maxLineLength: number = 35;
-        if(parsedY != ' '){
-          d3.select(nodes[i].parentNode)
-          .attr('transform', 'translate( 0 , '+ (parseInt(parsedY) + offset)+')')
-        }
-        if(d.length < maxLineLength){
-          return d;
-        }
-        let words: string[] = d.split(' ');
-        for(let i = 0; i < words.length;i++){
-          if(words[i] == ''){
-            words.splice(i,1);
-          }
-        }
-        let labelStart: string = '';
-        let currentWordIndex: number = 0;
-        while(labelStart.length + words[currentWordIndex].length < maxLineLength){
-          labelStart += ' ' + words[currentWordIndex];
-          currentWordIndex++;
-        }
-        
-        let substringOffset: number = 12;
-        while(currentWordIndex <= words.length - 1){
-          let line: string = words[currentWordIndex];
-          currentWordIndex++;
-          while(words[currentWordIndex] && line.length + words[currentWordIndex].length < maxLineLength){
-            line = line + ' ' + words[currentWordIndex];
-            currentWordIndex++;
-          }
-          
-          if(words[currentWordIndex] && (words[currentWordIndex].match(/[.,:!?]/))){
-            line += words[currentWordIndex];
-            currentWordIndex++;
-          }
-          d3.select(nodes[i].parentNode)
-            .append("text")
-            .text(function() {
-              return line;
-            })
-            .attr('y', substringOffset)
-            .attr('x', 20)
-            .attr('dy', '0.64em')
-          offset += 16;
-          substringOffset += 16;
-        }
-        return labelStart;
-      })
-      .each(function(d:any, i:any, nodes:any) {
-        d3.select(nodes[i].parentNode)
-            .attr('dy', '-0.32em')
-      })
-
-    
-  }
-
-  drawWallLegend (g: any, width: number, colorScale: any, title: string) {
-    g.append('g')
-      .attr('class', 'legendOrdinal')
-      .attr('transform', 'translate(' + (width - 20) + ', ' + 50 +')')
-      .append('text')
-      .text(title)
-      .attr('x',  -10)
-      .attr('y', -20)
-      .attr('font-size', 14)
-      .attr('font-weight', 'bold')
-  
-    var legendOrdinal = (legendColor() as any)
-      .shape('path', d3.symbol().type(d3.symbolSquare).size(200)()!)
-      .scale(colorScale)
-    
-    g.selectAll('.legendOrdinal')
-      .call(legendOrdinal)
-  }
-
+  /**
+ * Draws the pyramid graph
+ *
+ * @param {string[]} data The data we're showing
+ * @param {*} colorScale The color of the graph
+ */
   drawPyramid(data: string[], colorScale: any){
     const numElements = data.length;
 
@@ -557,6 +524,12 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('transform', 'rotate(180deg)')
   }
 
+   /**
+ * Draws the jars graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ * @param {string} title The title of the graph
+ */
   drawJars(data: QuestionData[], title: string) {
     d3.select('#title')
       .append('text')
@@ -579,7 +552,15 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .text((d) => Math.round(d.value) + '%')
   }
 
-  clientMapBackground (g:any, data: any, path: any, color: string, provinceAnswers: MapDataSetup[]) {
+  /**
+ * Draws the map graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {*} data The Canada data
+ * @param {*} path The path associated with the current projection
+ * @param {MapDataSetup[]} provinceAnswers The data to be displayed
+ */
+  clientMapBackground (g:any, data: any, path: any, provinceAnswers: MapDataSetup[]) {
     g.append('g')
     .selectAll('path')
     .data(data.features)
@@ -623,7 +604,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     .style('stroke-width', '0.5')
   }
 
-
+ /**
+ * Draws the Y axis of the tupperware graph.
+ *
+ * @param {*} yScale The scale to use to draw the axis
+ */
   drawTupperwareYAxis (yScale: any) {
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
@@ -631,6 +616,12 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     d3.select('.y.axis').selectAll('.tick').select('text').style('font-size', '20px');
   }
 
+ /**
+ * Draws the X axis of the tupperware graph.
+ *
+ * @param {*} xScale The scale to use to draw the axis
+ * @param {number} height The height of the graph
+ */
   drawTupperwareXAxis (xScale: any, height: number) {
     d3.select('.x.axis')
     .attr('transform', 'translate( 0, ' + height + ')')
@@ -641,6 +632,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
   }
 
 
+  /**
+ * Draws the scale graph
+ *
+ * @param {ScalesDataSetup[]} data The data we're showing
+ */
   drawScale(data: ScalesDataSetup[]) {
     d3.select('.allScales')
       .attr('y', 300)
@@ -666,6 +662,9 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       })
   }
 
+  /**
+ * Draws the scale graph's legend
+ */
   drawScaleLegend() {
     const legendItemsNames: string[] = ['Fait du vrac', 'Ne fait pas de vrac', "Fait l'épicerie en auto", "Fait l'épicerie en bus", "Fait l'épicerie en vélo", "Infinité de ressources", "Nombre fini de ressources"];
     d3.select('.allScales')
@@ -718,6 +717,13 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('margin-top', '5px')
   }
 
+  /**
+ * Rotates the scales in the scale graph
+ *
+ * @param {string} scaleName The name of the rotating scale
+ * @param {number} degrees The degrees to rotate
+ * @param {number} delay The delay before rotating
+ */
   rotateScale(scaleName:string, degrees: number, delay: number) {
     setTimeout(()=>{
       const scale = d3.select(scaleName)
@@ -732,6 +738,15 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }, delay);
   }
   
+  /**
+ * Adds images to the piles of scales
+ *
+ * @param {number} number The amount of images on the scale
+ * @param {string} scaleId The name of the scale
+ * @param {string} pileid The name of the pile
+ * @param {string} src The path to the image
+ * @param {number} delay The delay before adding images
+ */
   addImages(number: number, scaleId: string, pileid: string, src: string, delay: number) {
     const container = d3.select(scaleId).select(pileid);
     let start = (delay + number) * 0.6;
@@ -749,6 +764,12 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('animation-delay', function(d: any) { start -= 0.6; return start + "s"});
   }
 
+  /**
+ * Creates the scale animation
+ *
+ * @param {string} id The id of the animation
+ * @param {ScalesDataSetup} data The data that we want to show
+ */
   createBalanceAnimation(id: string, data: ScalesDataSetup) {
     const numberOfElements = 5;
 
@@ -784,6 +805,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     return animation;
   }
 
+  /**
+ * Draws the circle graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   drawCircles(data: QuestionData[]){
 
     const width = 150
@@ -829,6 +855,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     })
   }
 
+  /**
+ * Draws the images graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   drawImagesGraph(data: QuestionData[]) {
     const g = d3.select('.images-graph')
       .style('text-align', 'center')
@@ -882,6 +913,11 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
       .style('margin', '40px')
   }
 
+  /**
+ * Animates the images graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   animateImagesGraph(data: QuestionData[]) {
     const g = d3.select('.images-graph');
     setTimeout(()=>{
@@ -893,6 +929,9 @@ mapBackground (g:any, data: any, path: any, colorScale: any, provinceAnswers: Ma
     }, 500);
   }
 
+  /**
+ * Resets the images graph for the next animation
+ */
   resetImagesGraph() {
     const g = d3.select('.images-graph');
 
