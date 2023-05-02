@@ -5,6 +5,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+To run locally, you need to make sure `<base href="/">` in `remise_client_8808/src/index.html`.
 
 ## Code scaffolding
 
@@ -14,13 +15,10 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+## Update the website
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Once you run you build the project with the production flag, `ng build --prod` and push to https://github.com/jehag/remise_client_8808, the website will be automatically updated.
+To deploy the website, you need to make sure `<base href="/remise_client_8808/">` in `remise_client_8808/src/index.html`.
 
 ## Further help
 
