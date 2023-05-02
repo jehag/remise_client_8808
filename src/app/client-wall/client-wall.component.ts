@@ -80,6 +80,9 @@ export class ClientWallComponent implements OnInit {
     private vizService: VizService,
     private scalesService: ScalesService) { }
 
+  /**
+ * Gets the Canada data, the wall questions and creates all the graphs
+ */
   async ngOnInit() {
     this.mapData = await this.getCanadaData();
     this.questionsList = this.preprocessService.getClientWallQuestions();
@@ -87,12 +90,18 @@ export class ClientWallComponent implements OnInit {
     this.createGraphs();
   }
 
+  /**
+ * Gets the Canada data
+ */
   async getCanadaData() {
     return d3.json('assets/data/canada.json').then(function (data) {
       return data;
     })
   }
 
+  /**
+ * Changes the wall to the next graph and creates it
+ */
   nextGraph(){
     switch (this.graphType){
       case GraphType.Map:
@@ -122,6 +131,9 @@ export class ClientWallComponent implements OnInit {
     }
   }
 
+  /**
+ * Changes the wall to the previous graph and creates it
+ */
   previousGraph(){
     switch (this.graphType){
       case GraphType.Map:
@@ -151,6 +163,9 @@ export class ClientWallComponent implements OnInit {
     }
   }
 
+  /**
+ * Creates all of the graphs
+ */
   createGraphs() {
     this.createMapGraph();
     this.graphType = GraphType.Jars;
@@ -168,18 +183,26 @@ export class ClientWallComponent implements OnInit {
     this.graphType = GraphType.Map;
   }
 
+  /**
+ * Setups a map graph and creates it
+ */
   createMapGraph(){
-
     const provinceAnswers: MapDataSetup[] = this.getMapData();
     this.vizService.setCanvasSize(this.svgSize.width, this.svgSize.height, '#client-wall-chart');
     var projection = this.vizService.getProjection(this.mapData, this.svgSize.width, this.svgSize.height);
     var path = this.vizService.getPath(projection);    
     const g = this.vizService.generateG(this.margin, '.client-wall-graph');
-    const color: string = "#FF4136";
-    this.vizService.clientMapBackground(g, this.mapData, path, color, provinceAnswers);
+    this.vizService.clientMapBackground(g, this.mapData, path, provinceAnswers);
     this.vizService.appendClientWallTitle(g, "Combien de personnes font leur épicerie en vrac?", this.graphSize.width);
   }
 
+  /**
+ * Gets a question's data 
+ * 
+ * @param {string} symbol The symbol of the question
+ * @param {number} maxNumber The number of possible groups to get the data
+ * @returns {QuestionDataHelper[]} The question's data
+ */
   getQuestionData(symbol: string, maxNumber: number) : QuestionDataHelper[] {
     let user: any = {
       [symbol]: 0
@@ -209,6 +232,11 @@ export class ClientWallComponent implements OnInit {
     return questionDataList;
   }
 
+  /**
+ * Gets the map data 
+ * 
+ * @returns {MapDataSetup[]} The map data
+ */
   getMapData(): MapDataSetup[]{
     this.checkBoxChoices.myProvince = true;
     const questionDataList: QuestionDataHelper[] = this.getQuestionData('PROV', 13);
@@ -241,12 +269,20 @@ export class ClientWallComponent implements OnInit {
     return mapData;
   }
 
+  /**
+ * Setups the jars graph and creates it
+ */
   createJarsGraph() {
     const cityData: QuestionData[] = this.getJarsData();
     this.vizService.drawJars(cityData, 'Qui achète le plus en vrac?');
   }
 
-  getJarsData() {
+  /**
+ * Gets the jars data 
+ * 
+ * @returns {QuestionData[]} The jars data
+ */
+  getJarsData(): QuestionData[] {
     this.checkBoxChoices.myCitySize = true;
     let questionDataList: QuestionDataHelper[] = this.getQuestionData('COL', 4);
     this.checkBoxChoices.myCitySize = false;
@@ -273,6 +309,9 @@ export class ClientWallComponent implements OnInit {
     return data;
   }
 
+  /**
+ * Setups the pyramid graph and creates it
+ */
   createPyramidGraph() {
     const pyramidData: QuestionDataHelper = this.getPyramidData();
     const choices: string[] = pyramidData.questionData.map(function(d) {return d.label});
@@ -282,7 +321,12 @@ export class ClientWallComponent implements OnInit {
     this.vizService.drawPyramid(choices, colorScale);
   }
 
-  getPyramidData() {
+  /**
+ * Gets the pyramid data 
+ * 
+ * @returns {QuestionDataHelper} The pyramid data
+ */
+  getPyramidData(): QuestionDataHelper {
     let questionDataList: QuestionDataHelper[] = this.getQuestionData('Q10An1', 1);
     questionDataList[0].questionData.sort((a, b) => {
       return b.value - a.value;
@@ -290,6 +334,9 @@ export class ClientWallComponent implements OnInit {
     return questionDataList[0];
   }
 
+  /**
+ * Setups the tupperware graph and creates it
+ */
   createTupperwareGraph() {
     const labels = ["18-24", "25-39", "40-54", "55-64", "65 et plus"];
     const tupperwareData: QuestionData[] = this.getTupperwareData(labels);
@@ -309,6 +356,11 @@ export class ClientWallComponent implements OnInit {
     this.vizService.drawTupperwareBars(g, tupperwareData, xScale, yScale);
   }
 
+  /**
+ * Gets the tupperware data 
+ * 
+ * @returns {QuestionData[]} The tupperware data
+ */
   getTupperwareData(labels: string[]): QuestionData[] {
     this.checkBoxChoices.myAge = true;
     const questionDataList: QuestionDataHelper[] = this.getQuestionData('age', 6);
@@ -328,6 +380,9 @@ export class ClientWallComponent implements OnInit {
     return data;
   }
 
+  /**
+ * Setups the scales graph and creates it
+ */
   createScalesGraph(){
     const vehiculesData: ScalesDataSetup[] = this.getScalesData();
     const graph: any = d3.select('.scales-graph');
@@ -338,6 +393,11 @@ export class ClientWallComponent implements OnInit {
     }
   }
 
+  /**
+ * Gets the scales data 
+ * 
+ * @returns {ScalesDataSetup[]} The scales data
+ */
   getScalesData(): ScalesDataSetup[]{
     let vehiculesData: ScalesDataSetup[] = [];
     const vehiculeNames: string[] = ['Véhicule Personnel', 'Véhicule autopartage', 'Transport en commun', 'Marche ou Vélo', 'Livraison à domicile']
@@ -356,6 +416,9 @@ export class ClientWallComponent implements OnInit {
     return vehiculesData;
   }
 
+  /**
+ * Setups the circles graph and creates it
+ */
   createCirclesGraph() {
     const circlesData: QuestionData[] = this.getCirclesData();
     const graph: any = d3.select('.donuts-graph');
@@ -363,6 +426,11 @@ export class ClientWallComponent implements OnInit {
     this.vizService.drawCircles(circlesData);
   }
 
+  /**
+ * Gets the circles data 
+ * 
+ * @returns {QuestionData[]} The circles data
+ */
   getCirclesData(): QuestionData[] {
     const user: any = [];
     let circlesData: QuestionData[] = [];
@@ -376,6 +444,9 @@ export class ClientWallComponent implements OnInit {
     return circlesData;
   }
 
+  /**
+ * Animates the scales graph
+ */
   animate() {
     for (let animation of this.animations) {
       this.vizService.rotateScale(animation.id, 0, 0);
@@ -385,12 +456,20 @@ export class ClientWallComponent implements OnInit {
     }
   }
 
+  /**
+ * Setups the images graph and creates it
+ */
   createImagesGraph() {
     const imagesData: QuestionData[] = this.getImagesData();
     this.vizService.appendClientWallTitle(d3.select('.images-graph'), 'Combien de personnes font leur épicerie en vrac avec ces modes de transports?', this.graphSize.width)
     this.vizService.drawImagesGraph(imagesData);
   }
 
+  /**
+ * Gets the images data 
+ * 
+ * @returns {QuestionData[]} The images data
+ */
   getImagesData(): QuestionData[] {
     const imagesSrc: string[] = ['assets/images/car_hor.png', 'assets/images/communauto.png', 'assets/images/bus_hor.png', 'assets/images/bike.jpg']
     let imagesData: QuestionData[] = [];

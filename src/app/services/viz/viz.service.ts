@@ -394,11 +394,21 @@ export class VizService {
 
   }
 
+  /**
+ * Deletes the graph
+ *
+ * @param {string} graphId The id of the graph
+ */
   deleteGraph(graphId: string){
     const g = d3.select(graphId).selectAll('*').remove();
     g.remove();
   }
 
+  /**
+ * Sets up the projection to be used for the map
+ *
+ * @returns {*} The projection to use to trace the map elements
+ */
   getProjection (data: any, width: number, height:number) {
     return d3.geoAzimuthalEquidistant()
       .fitSize([width, height], data)
@@ -406,11 +416,23 @@ export class VizService {
       .translate([(width/2) - 150, height + height/2 + 50])
   }
   
+  /**
+ * Sets up the path to be used for the map
+ *
+ * @param {*} projection The projection used to trace the map elements
+ * @returns {*} The path to use to trace the map elements
+ */
   getPath (projection: d3.GeoProjection) {
     return d3.geoPath()
       .projection(projection)
   }
 
+  /**
+ * Draws the pyramid graph
+ *
+ * @param {string[]} data The data we're showing
+ * @param {*} colorScale The color of the graph
+ */
   drawPyramid(data: string[], colorScale: any){
     const numElements = data.length;
 
@@ -502,6 +524,12 @@ export class VizService {
       .style('transform', 'rotate(180deg)')
   }
 
+   /**
+ * Draws the jars graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ * @param {string} title The title of the graph
+ */
   drawJars(data: QuestionData[], title: string) {
     d3.select('#title')
       .append('text')
@@ -524,7 +552,15 @@ export class VizService {
       .text((d) => Math.round(d.value) + '%')
   }
 
-  clientMapBackground (g:any, data: any, path: any, color: string, provinceAnswers: MapDataSetup[]) {
+  /**
+ * Draws the map graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {*} data The Canada data
+ * @param {*} path The path associated with the current projection
+ * @param {MapDataSetup[]} provinceAnswers The data to be displayed
+ */
+  clientMapBackground (g:any, data: any, path: any, provinceAnswers: MapDataSetup[]) {
     g.append('g')
     .selectAll('path')
     .data(data.features)
@@ -568,7 +604,11 @@ export class VizService {
     .style('stroke-width', '0.5')
   }
 
-
+ /**
+ * Draws the Y axis of the tupperware graph.
+ *
+ * @param {*} yScale The scale to use to draw the axis
+ */
   drawTupperwareYAxis (yScale: any) {
     d3.select('.y.axis')
       .call(d3.axisLeft(yScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
@@ -576,6 +616,12 @@ export class VizService {
     d3.select('.y.axis').selectAll('.tick').select('text').style('font-size', '20px');
   }
 
+ /**
+ * Draws the X axis of the tupperware graph.
+ *
+ * @param {*} xScale The scale to use to draw the axis
+ * @param {number} height The height of the graph
+ */
   drawTupperwareXAxis (xScale: any, height: number) {
     d3.select('.x.axis')
     .attr('transform', 'translate( 0, ' + height + ')')
@@ -586,6 +632,11 @@ export class VizService {
   }
 
 
+  /**
+ * Draws the scale graph
+ *
+ * @param {ScalesDataSetup[]} data The data we're showing
+ */
   drawScale(data: ScalesDataSetup[]) {
     d3.select('.allScales')
       .attr('y', 300)
@@ -611,6 +662,9 @@ export class VizService {
       })
   }
 
+  /**
+ * Draws the scale graph's legend
+ */
   drawScaleLegend() {
     const legendItemsNames: string[] = ['Fait du vrac', 'Ne fait pas de vrac', "Fait l'épicerie en auto", "Fait l'épicerie en bus", "Fait l'épicerie en vélo", "Infinité de ressources", "Nombre fini de ressources"];
     d3.select('.allScales')
@@ -663,6 +717,13 @@ export class VizService {
       .style('margin-top', '5px')
   }
 
+  /**
+ * Rotates the scales in the scale graph
+ *
+ * @param {string} scaleName The name of the rotating scale
+ * @param {number} degrees The degrees to rotate
+ * @param {number} delay The delay before rotating
+ */
   rotateScale(scaleName:string, degrees: number, delay: number) {
     setTimeout(()=>{
       const scale = d3.select(scaleName)
@@ -677,6 +738,15 @@ export class VizService {
     }, delay);
   }
   
+  /**
+ * Adds images to the piles of scales
+ *
+ * @param {number} number The amount of images on the scale
+ * @param {string} scaleId The name of the scale
+ * @param {string} pileid The name of the pile
+ * @param {string} src The path to the image
+ * @param {number} delay The delay before adding images
+ */
   addImages(number: number, scaleId: string, pileid: string, src: string, delay: number) {
     const container = d3.select(scaleId).select(pileid);
     let start = (delay + number) * 0.6;
@@ -694,6 +764,12 @@ export class VizService {
       .style('animation-delay', function(d: any) { start -= 0.6; return start + "s"});
   }
 
+  /**
+ * Creates the scale animation
+ *
+ * @param {string} id The id of the animation
+ * @param {ScalesDataSetup} data The data that we want to show
+ */
   createBalanceAnimation(id: string, data: ScalesDataSetup) {
     const numberOfElements = 5;
 
@@ -729,6 +805,11 @@ export class VizService {
     return animation;
   }
 
+  /**
+ * Draws the circle graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   drawCircles(data: QuestionData[]){
 
     const width = 150
@@ -774,6 +855,11 @@ export class VizService {
     })
   }
 
+  /**
+ * Draws the images graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   drawImagesGraph(data: QuestionData[]) {
     const g = d3.select('.images-graph')
       .style('text-align', 'center')
@@ -827,6 +913,11 @@ export class VizService {
       .style('margin', '40px')
   }
 
+  /**
+ * Animates the images graph
+ *
+ * @param {QuestionData[]} data The data we're showing
+ */
   animateImagesGraph(data: QuestionData[]) {
     const g = d3.select('.images-graph');
     setTimeout(()=>{
@@ -838,6 +929,9 @@ export class VizService {
     }, 500);
   }
 
+  /**
+ * Resets the images graph for the next animation
+ */
   resetImagesGraph() {
     const g = d3.select('.images-graph');
 

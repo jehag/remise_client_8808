@@ -58,10 +58,18 @@ export class PhoneComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+ * Gets the questions list for the phone
+ *
+ * @returns {string[]} The string list of questions
+ */
   get questions(){
     return this.preprocessService.questionsList;
   }
 
+  /**
+ * Chooses what to do when a checkbox is altered
+ */
   checkBoxChanged(){
     if(this.isShowingGraph){
       if(this.isThemeQuestion){
@@ -72,6 +80,11 @@ export class PhoneComponent implements OnInit {
     }
   }
 
+  /**
+ * Defines the user that is currently chosen and resets the graph if necessary
+ *
+ * @param {boolean} man The sex of the user that has been chosen
+ */
   findUserData(man: boolean) {
     this.characterChosen = true;
     this.isMan = man;
@@ -81,6 +94,9 @@ export class PhoneComponent implements OnInit {
     }
   }
 
+  /**
+ * Gets the data of the question that has been selected
+ */
   getQuestionData(){
     const symbol = this.preprocessService.getFormattedSymbolWithQuestion(this.selectedQuestion);
     if(symbol.includes('r')){
@@ -101,12 +117,22 @@ export class PhoneComponent implements OnInit {
     }
   }
 
+  /**
+ * Gets the data of the question that has been selected if the questions is a sub question
+ */
   getSubQuestionData() {
     let subQuestionName: string = this.preprocessService.getSubQuestionRealName(this.selectedQuestion, this.selectedSubQuestion);
     let questionDataHelper: QuestionDataHelper = this.preprocessService.getQuestionData(subQuestionName, this.user, this.checkboxChoices);
     this.createGraph(questionDataHelper, this.selectedQuestion + ' ' + this.selectedSubQuestion, this.preprocessService.getProcessedSymbolWithSubQuestionName(subQuestionName));
   }
 
+  /**
+ * Creates a bar graph
+ *
+ * @param {QuestionDataHelper} questionDataHelper The data to be shown
+ * @param {string} questionName The name of the question
+ * @param {string} symbol The symbol of the question
+ */
   createGraph(questionDataHelper: QuestionDataHelper, questionName: string, symbol: string){
     this.isShowingGraph = true;
     this.vizService.deleteGraph('#bar-chart');
