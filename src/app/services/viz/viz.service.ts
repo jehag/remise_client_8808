@@ -12,6 +12,14 @@ import { ScalesDataSetup } from 'src/app/interfaces/scales-data-setup';
 export class VizService {
 
   constructor() { }
+
+  /**
+ * Generates the SVG element g which will contain the graph base.
+ *
+ * @param {Margin} Margin The margin of the page
+ * @param {string} graphClass The name of the class of the graph
+ * @returns {*} The d3 Selection for the created g element
+ */
   generateG (margin: Margin, graphClass: string) {
     return d3.select(graphClass)
       .select('svg')
@@ -20,6 +28,13 @@ export class VizService {
         'translate(' + margin.left + ',' + margin.top + ')')
   }
 
+  /**
+ * Sets the size of the SVG canvas containing the graph.
+ *
+ * @param {number} width The desired width
+ * @param {number} height The desired height
+ * @param {string} graphId The name of the Id of the graph
+ */
   setCanvasSize (width: number, height: number, graphId: string) {
     d3.select(graphId)
       .attr('width', width)
@@ -27,6 +42,11 @@ export class VizService {
       .attr("xmlns", "http://www.w3.org/2000/svg")
   }
 
+  /**
+ * Appends SVG g elements which will contain the axes.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendAxes (g: any) {
     g.append('g')
       .attr('class', 'x axis')
@@ -36,6 +56,11 @@ export class VizService {
       .style('transform', 'translate(10px, 0px)')
   }
 
+  /**
+ * Appends the labels for the x axis
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
@@ -43,6 +68,11 @@ export class VizService {
       .attr('font-size', 15)
   }
 
+    /**
+ * Appends the labels for the x and y axis on the tupperware graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ */
   appendTupperwareGraphLabels (g: any) {
     g.append('text')
       .text('Pourcentage (%)')
@@ -55,6 +85,13 @@ export class VizService {
       .attr('font-size', 25)
   }
 
+  /**
+ * Places the graph's title.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ */
   placeTitle (g: any, title: string, width: number) {
     if(title.length > 60){
 
@@ -94,6 +131,14 @@ export class VizService {
     }
   }
 
+  /**
+ * Appends the graph's title on the wall.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   appendClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.append('text')
       .attr('class', 'title')
@@ -107,6 +152,14 @@ export class VizService {
       .text(title)
   }
 
+  /**
+ * Prepends the graph's title on the wall.
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {string} title The name of the graph
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   insertClientWallTitle (g: any, title: string, width: number, height:number = -20) {
     g.insert("text",":first-child")
       .attr('class', 'title')
@@ -120,6 +173,13 @@ export class VizService {
       .text(title)
   }
 
+  /**
+ * Positions the x and y axis labels
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} width The width of the graph
+ * @param {number} height The height of the graph
+ */
   positionLabels (g: any, width: number, height: number) {
     g.selectAll('.y.axis-text')
       .attr('transform', 'translate( -50 ,' + height / 2 + '), rotate(-90)')
@@ -128,6 +188,14 @@ export class VizService {
       .attr('transform', 'translate(' + width / 2 + ',' + (height + 50) + ')')
   }
 
+  /**
+ * Positions the x and y axis labels on the wall
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} yHeight The height of the graph in y
+ * @param {number} xWidth The width of the graph in x
+ * @param {number} xHeight The height of the graph in x
+ */
   positionClientWallLabels (g: any, yHeight: number, xWidth : number, xHeight: number) {
     g.selectAll('.y.axis-text')
       .attr('transform', 'translate( -50 ,' + yHeight / 2 + '), rotate(-90)')
@@ -136,12 +204,23 @@ export class VizService {
       .attr('transform', 'translate(' + xWidth / 2 + ',' + (xHeight + 50) + ')')
   }
 
+  /**
+ * Draws the X axis at the bottom of the diagram.
+ *
+ * @param {*} xScale The scale to use to draw the axis
+ * @param {number} height The height of the graph
+ */
   drawXAxis (xScale: any, height: number) {
     d3.select('.x.axis')
       .attr('transform', 'translate( 0, ' + height + ')')
       .call(d3.axisBottom(xScale).tickSizeOuter(0).tickArguments([5, '~s']) as any)
   }
 
+  /**
+ * Draws the Y axis to the left of the diagram.
+ *
+ * @param {*} yScale The scale to use to draw the axis
+ */
   drawYAxis (yScale: any) {
     const maxLineLength = 35;
     d3.select('.y.axis')
@@ -202,6 +281,13 @@ export class VizService {
     })
   }
 
+  /**
+ * Draws the legend for the phone
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {number} width The width of the graph, used to place the legend
+ * @param {*} colorScale The color scale to use
+ */
   drawLegend (g: any, width: number, colorScale: any) {
     g.append('g')
       .attr('class', 'legendOrdinal')
@@ -217,6 +303,15 @@ export class VizService {
       .call(legendOrdinal)
   }
 
+  /**
+ * Displays the bars for the phone graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {QuestionData[]} data The data to be displayed
+ * @param {*} xScale The scale to use to draw on the x axis
+ * @param {*} yScale The scale to use to draw on the y axis
+ * @param {string} userChoice The user's choice
+ */
   drawBars(g:any, data: QuestionData[], xScale:any, yScale:any, userChoice: string) {
     g.selectAll(".bar")
       .data(data)
@@ -229,6 +324,14 @@ export class VizService {
       .attr('x', '10px')
   }
 
+  /**
+ * Displays the tuppeware bars for the wall graph
+ *
+ * @param {*} g The d3 Selection of the graph's g SVG element
+ * @param {QuestionData[]} data The data to be displayed
+ * @param {*} xScale The scale to use to draw on the x axis
+ * @param {*} yScale The scale to use to draw on the y axis
+ */
   drawTupperwareBars(g:any, data: QuestionData[], xScale:any, yScale:any) {
     const ware = `
     <div class="ware"></div>
